@@ -7,9 +7,9 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
-                    <form class="wrap_form" enctype="multipart/form-data">
+                    <form class="wrap_form" id="general" enctype="multipart/form-data">
                     @csrf
-                    <input type="text" name="id" id="general_id" value="">
+                    <input type="hidden" name="id" class="general_id" value="">
                     <div class="mb-3 col-md-3">
                         <label class="form-label">First Name</label>
                         <input type="text" name="first_name" class="form-control"  placeholder="Enter First Name">
@@ -90,7 +90,7 @@
                     <div class="clear"></div>
                     <div class="mb-3 col-md-3">
                         <label class="form-label">Talent ID</label>
-                        <input type="text" name="talent_id" class="form-control" value="1SF45600A" readonly >
+                        <input type="text" id="talent_id"  class="form-control" value="" readonly >
                     </div>
                     <div class="mb-3 col-md-3 md_3_1">
                         <label class="form-label">Minimum Tariff</label>
@@ -127,7 +127,7 @@
                             <h5>Addresses</h5>
                         </div>
                         <div class="singl_socil singl_socil_2">
-                            <input type="text" name="addresses[0][id]" value="{{ $address->id ?? '' }}">
+                            <input type="hidden" name="addresses[0][id]" value="{{ $address->id ?? '' }}">
                             <div class="mb-3 input_hlaf">
                                 <label class="form-label">Address 1</label>
                                 <textarea name="addresses[0][address1]" class="form-control" rows="2" ></textarea>
@@ -205,7 +205,7 @@
                         </div>
                         <div class="clear"></div>
                         <div class="singl_socil">
-                            <input type="text" name="social_media[0][id]" value="{{ $social->id ?? '' }}">
+                            <input type="hidden" name="social_media[0][id]" value="{{ $social->id ?? '' }}">
                             <div class="mb-3 col-md-3 ">
                                 <label class="form-label">Media</label>
                                 <input type="text" name="social_media[0][media]" class="form-control"  placeholder="Enter Media Name">

@@ -28,7 +28,6 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->string('zip')->nullable();
             $table->string('country')->nullable();
-            $table->string('talent_id')->nullable();
             $table->float('minimum_tariff', 8, 2)->nullable();
             $table->float('minimum_hourly_rate', 8, 2)->nullable();
             $table->float('minimum_day_rate', 8, 2)->nullable();

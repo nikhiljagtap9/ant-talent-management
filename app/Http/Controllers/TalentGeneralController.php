@@ -67,7 +67,6 @@ class TalentGeneralController extends Controller
             $general->state = $request->state;
             $general->zip = $request->zip;
             $general->country = $request->country;
-            $general->talent_id = $request->talent_id;
             $general->minimum_tariff = $request->minimum_tariff;
             $general->minimum_hourly_rate = $request->minimum_hourly_rate;
             $general->minimum_day_rate = $request->minimum_day_rate;

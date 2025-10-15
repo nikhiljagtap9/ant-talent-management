@@ -7,6 +7,7 @@ use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TalentGeneralController;
+use App\Http\Controllers\TalentLegalController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -37,6 +38,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/talent/add', [TalentGeneralController::class, 'add'])->name('talent.add');
         Route::get('/talent/view', [TalentGeneralController::class, 'view'])->name('talent.view');
         Route::post('/talent/general/store', [TalentGeneralController::class, 'store'])->name('talent.general.store');
+        Route::post('/talent/legal/store', [TalentLegalController::class, 'store'])->name('talent.legal.store');
 
     });
 

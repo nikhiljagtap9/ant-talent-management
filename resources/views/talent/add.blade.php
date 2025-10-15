@@ -336,7 +336,7 @@
       $('#add_address').click(function(e){
          e.preventDefault();
          let html = `<div class="singl_socil singl_socil_2 address_block">
-                           <input type="text" name="addresses[${addressIndex}][id]" value="">
+                           <input type="hidden" name="addresses[${addressIndex}][id]" value="">
                             <div class="mb-3 input_hlaf">
                                 <label class="form-label">Address 1</label>
                                 <textarea name="addresses[${addressIndex}][address1]" class="form-control" rows="2" ></textarea>
@@ -377,7 +377,7 @@
       $('#add_social').click(function(e){
          e.preventDefault();
          let html = `<div class="singl_socil social_block">
-                           <input type="text" name="social_media[${socialIndex}][id]" value="">
+                           <input type="hidden" name="social_media[${socialIndex}][id]" value="">
                             <div class="mb-3 col-md-3 ">
                                 <label class="form-label">Media</label>
                                 <input type="text" name="social_media[${socialIndex}][media]" class="form-control"  placeholder="Enter Media Name">
@@ -405,7 +405,7 @@
          $(this).closest('.social_block').remove();
       });
       
-      $(document).on('submit', '.wrap_form', function(e) {
+      $(document).on('submit', '#general', function(e) {
          e.preventDefault();
 
          let form = $(this);
@@ -423,7 +423,8 @@
                processData: false,  // Prevent jQuery from converting data to string
                success: function(response) {
                   if (response.status) {
-                     $('#general_id').val(response.id);
+                     $('.general_id').val(response.id);
+                     $('#talent_id').val(response.id);
                      alert(response.message);
                      // Move to next tab automatically
                      $('a[href="#billing_panel"]').tab('show');
@@ -444,6 +445,40 @@
                   $('#formErrors').html('Something went wrong, please try again.').removeClass('d-none');
                   $('html, body').animate({ scrollTop: $('#formErrors').offset().top - 80 }, 500);
                }
+         });
+      });
+   </script>
+
+   <!-- step 2-->
+   <script>
+      $(document).on('submit', '#legal', function(e){
+         e.preventDefault();
+         let form = $(this);
+         let formData = new FormData(this);
+
+         $('#formErrors').html('').addClass('d-none');
+
+         $.ajax({
+            url: "{{ route('talent.legal.store') }}",
+            method: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response){
+                  if(response.status){
+                     alert(response.message);
+                     $('#legal_id').val(response.id);
+                     $('a[href="#contact_tab"]').tab('show'); // move to next tab
+                  } else {
+                     let errorList = '<ul>';
+                     $.each(response.errors, function(k, v){
+                        errorList += '<li>'+v[0]+'</li>';
+                     });
+                     errorList += '</ul>';
+                     $('#formErrors').html(errorList).removeClass('d-none');
+                     $('html, body').animate({scrollTop: $('#formErrors').offset().top - 80}, 500);
+                  }
+            }
          });
       });
    </script>

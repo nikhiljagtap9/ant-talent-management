@@ -15,7 +15,7 @@ class TGeneral extends Model
         'first_name', 'last_name', 'location', 'gender',
         'date_joined_agency', 'dob', 'birth_place', 'nationality',
         'mobile', 'phone', 'website', 'email', 'state', 'zip', 'country',
-        'talent_id', 'minimum_tariff', 'minimum_hourly_rate', 'minimum_day_rate',
+        'minimum_tariff', 'minimum_hourly_rate', 'minimum_day_rate',
         'kids', 'allow_sms', 'email_icalendar', 'category'
     ];
 
