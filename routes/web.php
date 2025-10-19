@@ -6,8 +6,11 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\TalentGeneralController;
-use App\Http\Controllers\TalentLegalController;
+use App\Http\Controllers\Talent\GeneralController;
+use App\Http\Controllers\Talent\LegalController;
+use App\Http\Controllers\Talent\ContactController;
+use App\Http\Controllers\Talent\AgencyController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -35,11 +38,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Admin only
     Route::middleware('admin')->group(function () {
-        Route::get('/talent/add', [TalentGeneralController::class, 'add'])->name('talent.add');
-        Route::get('/talent/view', [TalentGeneralController::class, 'view'])->name('talent.view');
-        Route::post('/talent/general/store', [TalentGeneralController::class, 'store'])->name('talent.general.store');
-        Route::post('/talent/legal/store', [TalentLegalController::class, 'store'])->name('talent.legal.store');
-
+        Route::get('/talent/add', [GeneralController::class, 'add'])->name('talent.add');
+        Route::get('/talent/view', [GeneralController::class, 'view'])->name('talent.view');
+        Route::post('/talent/general/store', [GeneralController::class, 'store'])->name('talent.general.store');
+        Route::post('/talent/legal/store', [LegalController::class, 'store'])->name('talent.legal.store');
+        Route::post('/talent/contact/store', [ContactController::class, 'store'])->name('talent.contact.store');
+        Route::get('/talent/contacts/list/{t_general_id}', [ContactController::class, 'list'])->name('talent.contacts.list');
+        Route::post('/talent/agencies/store', [AgencyController::class, 'store'])->name('talent.agencies.store');
+        Route::get('/talent/agencies/list/{t_general_id}', [AgencyController::class, 'list'])->name('talent.agencies.list');
+        Route::delete('/talent/agencies/delete/{id}', [AgencyController::class, 'delete'])->name('talent.agencies.delete');
     });
 
 

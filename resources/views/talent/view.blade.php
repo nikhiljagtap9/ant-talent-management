@@ -128,118 +128,31 @@
                               </tr>
                            </thead>
                            <tbody>
-                              <tr>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 12SDFEDE </a> </td>
-                                 <td><img src="assets/images/user/avatar-2.jpg" class="logo_compns" ></td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > Lorem Name </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > Lorem Name </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > user@gmail.com </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > +123 456 7890 </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > +123 456 7890 </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > +123 456 7890 </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > Lorem </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 120K </a> </td>
-                                 <td><a href="talent_detail.php" class="lnk_a" >120K</a></td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 120K </a> </td>
-                                 <td><a href="talent_detail.php" class="lnk_a" > 20K </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 13-Dec-2010 </a> </td>
-                              </tr>
-                              <tr>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 12SDFEDE </a> </td>
-                                 <td><img src="assets/images/user/avatar-2.jpg" class="logo_compns" ></td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > Lorem Name </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > Lorem Name </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > user@gmail.com </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > +123 456 7890 </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > +123 456 7890 </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > +123 456 7890 </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > Lorem </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 120K </a> </td>
-                                 <td><a href="talent_detail.php" class="lnk_a" >120K</a></td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 120K </a> </td>
-                                 <td><a href="talent_detail.php" class="lnk_a" > 20K </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 13-Dec-2010 </a> </td>
-                              </tr>
-                              <tr>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 12SDFEDE </a> </td>
-                                 <td><img src="assets/images/user/avatar-2.jpg" class="logo_compns" ></td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > Lorem Name </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > Lorem Name </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > user@gmail.com </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > +123 456 7890 </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > +123 456 7890 </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > +123 456 7890 </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > Lorem </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 120K </a> </td>
-                                 <td><a href="talent_detail.php" class="lnk_a" >120K</a></td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 120K </a> </td>
-                                 <td><a href="talent_detail.php" class="lnk_a" > 20K </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 13-Dec-2010 </a> </td>
-                              </tr>
-                              <tr>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 12SDFEDE </a> </td>
-                                 <td><img src="assets/images/user/avatar-2.jpg" class="logo_compns" ></td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > Lorem Name </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > Lorem Name </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > user@gmail.com </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > +123 456 7890 </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > +123 456 7890 </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > +123 456 7890 </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > Lorem </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 120K </a> </td>
-                                 <td><a href="talent_detail.php" class="lnk_a" >120K</a></td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 120K </a> </td>
-                                 <td><a href="talent_detail.php" class="lnk_a" > 20K </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 13-Dec-2010 </a> </td>
-                              </tr>
-                              <tr>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 12SDFEDE </a> </td>
-                                 <td><img src="assets/images/user/avatar-2.jpg" class="logo_compns" ></td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > Lorem Name </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > Lorem Name </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > user@gmail.com </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > +123 456 7890 </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > +123 456 7890 </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > +123 456 7890 </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > Lorem </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 120K </a> </td>
-                                 <td><a href="talent_detail.php" class="lnk_a" >120K</a></td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 120K </a> </td>
-                                 <td><a href="talent_detail.php" class="lnk_a" > 20K </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 13-Dec-2010 </a> </td>
-                              </tr>
-                              <tr>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 12SDFEDE </a> </td>
-                                 <td><img src="assets/images/user/avatar-2.jpg" class="logo_compns" ></td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > Lorem Name </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > Lorem Name </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > user@gmail.com </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > +123 456 7890 </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > +123 456 7890 </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > +123 456 7890 </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > Lorem </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 120K </a> </td>
-                                 <td><a href="talent_detail.php" class="lnk_a" >120K</a></td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 120K </a> </td>
-                                 <td><a href="talent_detail.php" class="lnk_a" > 20K </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 13-Dec-2010 </a> </td>
-                              </tr>
-                              <tr>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 12SDFEDE </a> </td>
-                                 <td><img src="assets/images/user/avatar-2.jpg" class="logo_compns" ></td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > Lorem Name </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > Lorem Name </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > user@gmail.com </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > +123 456 7890 </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > +123 456 7890 </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > +123 456 7890 </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > Lorem </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 120K </a> </td>
-                                 <td><a href="talent_detail.php" class="lnk_a" >120K</a></td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 120K </a> </td>
-                                 <td><a href="talent_detail.php" class="lnk_a" > 20K </a> </td>
-                                 <td> <a href="talent_detail.php" class="lnk_a" > 13-Dec-2010 </a> </td>
-                              </tr>
+                              @foreach($talents as $talent)
+                                 <tr>
+                                    <td>
+                                       <a href="{{ route('talent.add', ['id' => $talent->id]) }}" class="lnk_a">
+                                          {{ $talent->unique_code }}
+                                       </a>
+                                    </td>
+                                    <td>
+                                       <img src="{{ asset('assets/images/user/avatar-2.jpg')}}" class="logo_compns">
+                                    </td>
+                                    <td><a href="{{ route('talent.add', ['id' => $talent->id]) }}" class="lnk_a">{{ $talent->first_name }}</a></td>
+                                    <td><a href="{{ route('talent.add', ['id' => $talent->id]) }}" class="lnk_a">{{ $talent->last_name }}</a></td>
+                                    <td>{{ $talent->email }}</td>
+                                    <td>{{ $talent->phone }}</td>
+                                    <td>{{ $talent->mobile }}</td>
+                                    <td>{{ $talent->whatsapp }}</td>
+                                    <td>{{ $talent->mother_agency }}</td>
+                                    <td>{{ $talent->mother_agency_country }}</td>
+                                    <td>{{ $talent->instagram }}</td>
+                                    <td>{{ $talent->tiktok }}</td>
+                                    <td>{{ $talent->facebook }}</td>
+                                    <td>{{ $talent->date_joined ? \Carbon\Carbon::parse($talent->date_joined)->format('d-M-Y') : '-' }}</td>
+                                 </tr>
+                                 @endforeach
+
                            </tbody>
                         </table>
                      </div>

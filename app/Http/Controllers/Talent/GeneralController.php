@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Talent;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\TGeneral;
 use App\Models\TAddress;
@@ -9,14 +10,38 @@ use App\Models\TSocialMedia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class TalentGeneralController extends Controller
+class GeneralController extends Controller
 {
-     public function add()
+    public function add(Request $request)
     {
         $user = Auth::user();
+        $id = $request->id;
+
+        $general = null;
+        $addresses = [];
+        $socialMedia = [];
+        $categories = [];
+
+        if($id){
+            $general = TGeneral::with(['addresses','socialMedia','legal','contacts','agencies'])->find($id);
+            if (!$general) {
+                return redirect()->back()->with('error', 'Talent not found.');
+            }
+            $addresses = $general->addresses;
+            $socialMedia = $general->socialMedia;
+            $legal = $general->legal;
+            $contacts = $general->contacts;
+            $agencies = $general->agencies;
+
+            // Convert stored category (string or JSON) into array
+            $categories = is_array($general->category)
+                ? $general->category
+                : explode(',', $general->category ?? '');
+            }
 
         return view('talent.add', compact(
-            'user'
+            'user','general', 'addresses', 'socialMedia' , 
+            'categories' ,'legal', 'contacts','agencies'
         ));
     }
 
@@ -24,8 +49,11 @@ class TalentGeneralController extends Controller
     {
         $user = Auth::user();
 
+        // Fetch all talent general records
+        $talents = TGeneral::orderByDesc('id')->get();
+
         return view('talent.view', compact(
-            'user'
+            'user','talents'
         ));
     }
 

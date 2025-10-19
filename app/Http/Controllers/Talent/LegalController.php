@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Talent;
 
+use App\Http\Controllers\Controller;
 use App\Models\TLegal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class TalentLegalController extends Controller
+class LegalController extends Controller
 {
     public function store(Request $request)
     {

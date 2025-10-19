@@ -28,5 +28,20 @@ class TGeneral extends Model
     {
         return $this->hasMany(TSocialMedia::class, 't_general_id');
     }
+
+    public function legal()
+    {
+        return $this->hasOne(TLegal::class, 't_general_id');
+    }
+
+    public function contacts()
+    {
+        return $this->hasMany(TContact::class, 't_general_id');
+    }
+
+    public function agencies()
+    {
+        return $this->hasMany(TAgency::class, 't_general_id');
+    }
 }
 

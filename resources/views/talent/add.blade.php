@@ -388,7 +388,7 @@
                             </div>
                             <div class="mb-3 col-md-3 md_3_2">
                                 <label class="form-label">Number</label>
-                                <input type="text" name="social_media[${socialIndex}][number]" class="form-control"  placeholder="Enter ZIP">
+                                <input type="text" name="social_media[${socialIndex}][number]" class="form-control"  placeholder="Enter Number">
                             </div>
                             <div class="mb-3 col-md-3 md_3_4">
                                 <label class="form-label">Date Updated </label>
@@ -476,10 +476,273 @@
                      });
                      errorList += '</ul>';
                      $('#formErrors').html(errorList).removeClass('d-none');
-                     $('html, body').animate({scrollTop: $('#formErrors').offset().top - 80}, 500);
+                    // $('html, body').animate({scrollTop: $('#formErrors').offset().top - 80}, 500);
                   }
             }
          });
       });
+   </script>
+
+   <!-- step 3 -->
+   <script>
+      loadContacts();
+      let contactIndex = 1;
+
+      // Add more contact
+      $('#add_contact').click(function (e) {
+         e.preventDefault();
+
+         let html = `
+         <div class="singl_socil contact_block">
+         <input type="hidden" name="contact[${contactIndex}][id]" value="{{ $contact->id ?? '' }}">
+            <div class="mb-3 col-md-2 smal_5">
+                  <label class="form-label">Name</label>
+                  <input type="text" name="contact[${contactIndex}][name]" class="form-control" placeholder="Enter Name">
+            </div>
+            <div class="mb-3 col-md-2 smal_5">
+                  <label class="form-label">Relationship</label>
+                  <input type="text" name="contact[${contactIndex}][relationship]" class="form-control" placeholder="Enter Relationship">
+            </div>
+            <div class="mb-3 col-md-2 smal_5">
+                  <label class="form-label">Email</label>
+                  <input type="text" name="contact[${contactIndex}][email]" class="form-control" placeholder="Enter Email">
+            </div>
+            <div class="mb-3 col-md-2 smal_5">
+                  <label class="form-label">Phone</label>
+                  <input type="text" name="contact[${contactIndex}][phone]" class="form-control" placeholder="Enter Phone">
+            </div>
+            <div class="mb-3 col-md-2 smal_5">
+                  <label class="form-label">Mobile</label>
+                  <input type="text" name="contact[${contactIndex}][mobile]" class="form-control" placeholder="Enter Mobile">
+            </div>
+            <button type="button" class="btn btn-danger btn-sm remove_contact" style="margin-top:30px;">Remove</button>
+         </div>`;
+         
+         $('#contact_wrapper').append(html);
+         contactIndex++;
+      });
+
+      // Remove contact block
+      $(document).on('click', '.remove_contact', function () {
+         $(this).closest('.contact_block').remove();
+      });
+
+
+
+
+      $(document).on('submit', '#contactForm', function(e){
+         e.preventDefault();
+         let form = $(this);
+         let formData = new FormData(this);
+
+         $('#formErrors').html('').addClass('d-none');
+
+         $.ajax({
+            url: "{{ route('talent.contact.store') }}",
+            method: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                  if (response.status) {
+                     alert(response.message);
+                     loadContacts(); // refresh contact table
+                     $('a[href="#agencies_tab"]').tab('show'); 
+                  } else {
+                     alert('Error: ' + response.message);
+                  }
+            },
+            error: function (xhr) {
+                  $('#formErrors').html('Something went wrong, please try again.').removeClass('d-none');
+                  $('html, body').animate({ scrollTop: $('#formErrors').offset().top - 80 }, 500);
+            }
+         });
+      });
+
+      // Load contact list dynamically
+      function loadContacts() {
+         let generalId = $('.general_id').val();
+         if (!generalId) {
+            console.log("No general ID provided!");
+            return;
+         }
+
+         $.ajax({
+            url: '/talent/contacts/list/' + generalId,
+            method: "GET",
+            success: function (response) {
+                  let contacts = response.data ?? [];  // Use the 'data' array
+                  let rows = '';
+                  if (contacts.length > 0) {
+                     $.each(contacts, function (i, contact) {
+                        rows += `<tr>
+                              <td>${contact.name ?? ''}</td>
+                              <td>${contact.relationship ?? ''}</td>
+                              <td>${contact.email ?? ''}</td>
+                              <td>${contact.phone ?? ''}</td>
+                              <td>${contact.mobile ?? ''}</td>
+                        </tr>`;
+                     });
+                  } else {
+                     rows = `<tr><td colspan="5" class="text-center">No Records found</td></tr>`;
+                  }
+
+                  $('#contactTable tbody').html(rows);
+            },
+            error: function(xhr, status, error) {
+                  console.error("AJAX error:", error);
+            }
+         });
+      }
+
+   </script>
+   
+   
+<!-- 4 -->
+   <script>
+      loadAgencies();
+       let agencyIndex = 1;
+
+      // Add new agency block
+      $('#add_agency').click(function (e) {
+         e.preventDefault();
+
+         let html = `
+         <div class="singl_socil agency_block border p-2 mb-3">
+               <input type="hidden" name="agency[${agencyIndex}][id]" value="">
+
+               <div class="mb-3 col-md-2 smal_5">
+                  <label class="form-label">Agency Name</label>
+                  <select class="form-control" name="agency[${agencyIndex}][agency_name]">
+                     <option value="">Select Agency</option>
+                     <option>Agency 1</option>
+                     <option>Agency 2</option>
+                     <option>Agency 3</option>
+                  </select>
+               </div>
+
+               <div class="mb-3 col-md-2 smal_5">
+                  <label class="form-label">Mother Agency %</label>
+                  <input type="text" name="agency[${agencyIndex}][mother_agency_percentage]" class="form-control" placeholder="Enter Mother Agency %">
+               </div>
+
+               <div class="mb-3 col-md-2 smal_5">
+                  <label class="form-label">Assigned On</label>
+                  <select class="form-control" name="agency[${agencyIndex}][assigned_on]">
+                     <option value="">Select Option</option>
+                     <option>Gross Rate</option>
+                     <option>Talent Gross</option>
+                     <option>Talent Net</option>
+                     <option>Agency Comm.</option>
+                  </select>
+               </div>
+
+               <div class="mb-3 col-md-2 smal_5">
+                  <label class="form-label">Start Date</label>
+                  <input type="date" name="agency[${agencyIndex}][start_date]" class="form-control">
+               </div>
+
+               <div class="mb-3 col-md-2 smal_5">
+                  <label class="form-label">End Date</label>
+                  <input type="date" name="agency[${agencyIndex}][end_date]" class="form-control">
+               </div>
+
+               <div class="mt-2">
+                  <label class="child_as">
+                     <input type="checkbox" name="agency[${agencyIndex}][mother_agency]">
+                     <div class="child_as_lbl">Mother Agency</div>
+                  </label>
+
+                  <label class="child_as">
+                     <input type="checkbox" name="agency[${agencyIndex}][other_mother_agency]">
+                     <div class="child_as_lbl">Other Mother Agency</div>
+                  </label>
+
+                  <label class="child_as">
+                     <input type="checkbox" name="agency[${agencyIndex}][placement]">
+                     <div class="child_as_lbl">Placement</div>
+                  </label>
+
+                  <label class="child_as">
+                     <input type="checkbox" name="agency[${agencyIndex}][contract_received]">
+                     <div class="child_as_lbl">Contract Received</div>
+                  </label>
+               </div>
+
+               <button type="button" class="btn btn-danger btn-sm mt-2 remove_agency">Remove</button>
+         </div>`;
+
+         $('#agency_wrapper').append(html);
+         agencyIndex++;
+      });
+
+      // Remove agency block
+      $(document).on('click', '.remove_agency', function () {
+         $(this).closest('.agency_block').remove();
+      });
+
+      $('#agenciesForm').submit(function(e) {
+         e.preventDefault();
+
+         let formData = new FormData(this);
+
+         $.ajax({
+            url: "{{ route('talent.agencies.store') }}",
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                  alert(response.message);
+                  loadAgencies(); // reload list
+            },
+            error: function(xhr) {
+                  alert('Error: ' + xhr.responseJSON.message);
+            }
+         });
+      });
+
+      function loadAgencies() {
+         const generalId = $('.general_id').val();
+
+         if (!generalId) {
+            console.log("No general ID provided!");
+            return;
+         }
+
+         $.ajax({
+            url: '/talent/agencies/list/' + generalId,
+            method: "GET",
+            success: function (response) {
+                  let agencies = response.data ?? [];  // Use the 'data' array
+                  let rows = '';
+                  if (agencies.length > 0) {
+                     $.each(agencies, function (i, a) {
+                        rows += `<tr>
+                              <td>${a.agency_name ?? ''}</td>
+                              <td>${a.country ?? ''}</td>
+                              <td>${a.city ?? ''}</td>
+                              <td>${a.phone ?? ''}</td>
+                              <td>${a.mother_agency_percentage ?? ''}</td>
+                              <td>${a.assigned_on ?? ''}</td>
+                              <td>${a.mother_agency ? 'Yes' : 'No'}</td>
+                              <td>${a.other_mother_agency ? 'Yes' : 'No'}</td>
+                              <td>${a.placement ? 'Yes' : 'No'}</td>
+                              <td>${a.contract_received ? 'Yes' : 'No'}</td>
+                              <td>${a.start_date ?? ''}</td>
+                              <td>${a.end_date ?? ''}</td>
+                        </tr>`;
+                     });
+                  } else {
+                     rows = `<tr><td colspan="5" class="text-center">No Records found</td></tr>`;
+                  }
+               
+                  $('#agencyTable tbody').html(rows);
+            },
+            error: function(xhr, status, error) {
+                  console.error("AJAX error:", error);
+            }
+         });
+      }
    </script>
 @endsection
