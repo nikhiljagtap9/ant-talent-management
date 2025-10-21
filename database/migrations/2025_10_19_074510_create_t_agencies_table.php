@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('t_agencies', function (Blueprint $table) {
-           $table->id();
+            $table->id();
             $table->foreignId('t_general_id')->constrained('t_general')->onDelete('cascade');
             $table->string('agency_name')->nullable();
             // $table->string('country')->nullable();

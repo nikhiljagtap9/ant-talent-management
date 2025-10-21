@@ -20,7 +20,7 @@
                                     <div class="mb-3 col-md-2 smal_5">
                                         <label class="form-label">Agency Name</label>
                                         <select class="form-control" name="agency[{{ $index }}][agency_name]" >
-                                            <option>Select Agency</option>
+                                            <option value="">Select Agency</option>
                                             <option value="Agency 1" {{ $agency->agency_name == 'Agency 1' ? 'selected' : '' }}>Agency 1</option>
                                             <option value="Agency 2" {{ $agency->agency_name == 'Agency 2' ? 'selected' : '' }}>Agency 2</option>
                                             <option value="Agency 3" {{ $agency->agency_name == 'Agency 3' ? 'selected' : '' }}>Agency 3</option>
@@ -35,7 +35,7 @@
                                     <div class="mb-3 col-md-2 smal_5">
                                         <label class="form-label">Assigned On</label>
                                         <select class="form-control" name="agency[{{ $index }}][assigned_on]">
-                                            <option>Assigned On</option>
+                                            <option value="">Assigned On</option>
                                             <option value="Gross Rate" {{ $agency->assigned_on == 'Gross Rate' ? 'selected' : '' }}>Gross Rate</option>
                                             <option value="Talent Gross" {{ $agency->assigned_on == 'Talent Gross' ? 'selected' : '' }}>Talent Gross</option>
                                             <option value="Talent Net" {{ $agency->assigned_on == 'Talent Net' ? 'selected' : '' }}>Talent Net</option>
@@ -92,10 +92,10 @@
                                     <div class="mb-3 col-md-2 smal_5">
                                         <label class="form-label">Agency Name</label>
                                         <select class="form-control" name="agency[0][agency_name]" >
-                                        <option>Select Agency</option>
-                                        <option>Agency 1</option>
-                                        <option>Agency 2</option>
-                                        <option>Agency 3</option>
+                                            <option value="">Select Agency</option>
+                                            <option value="Agency 1">Agency 1</option>
+                                            <option value="Agency 2">Agency 2</option>
+                                            <option value="Agency 3">Agency 3</option>
                                         </select>
                                     </div>
                                     <div class="mb-3 col-md-2 smal_5">
@@ -105,11 +105,11 @@
                                     <div class="mb-3 col-md-2 smal_5">
                                         <label class="form-label">Assigned On</label>
                                         <select class="form-control" name="agency[0][assigned_on]">
-                                        <option>Assigned On</option>
-                                        <option>Gross Rate</option>
-                                        <option>Talent Gross</option>
-                                        <option>Talent Net</option>
-                                        <option>Agency Comm.</option>
+                                            <option value="">Select Assigned On</option>
+                                            <option value="Gross Rate">Gross Rate</option>
+                                            <option value="Talent Gross">Talent Gross</option>
+                                            <option value="Talent Net">Talent Net</option>
+                                            <option value="Agency Comm.">Agency Comm.</option>
                                         </select>
                                     </div>
                                     <div class="mb-3 col-md-2 smal_5">

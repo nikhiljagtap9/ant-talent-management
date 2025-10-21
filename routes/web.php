@@ -10,6 +10,7 @@ use App\Http\Controllers\Talent\GeneralController;
 use App\Http\Controllers\Talent\LegalController;
 use App\Http\Controllers\Talent\ContactController;
 use App\Http\Controllers\Talent\AgencyController;
+use App\Http\Controllers\Talent\UsageController;
 
 
 Route::get('/', function () {
@@ -47,7 +48,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/talent/agencies/store', [AgencyController::class, 'store'])->name('talent.agencies.store');
         Route::get('/talent/agencies/list/{t_general_id}', [AgencyController::class, 'list'])->name('talent.agencies.list');
         Route::delete('/talent/agencies/delete/{id}', [AgencyController::class, 'delete'])->name('talent.agencies.delete');
-    });
+        Route::post('/talent/usage/store', [UsageController::class, 'store'])->name('talent.usage.store');
+    }); 
 
 
     // Manager can access reports, projects, etc.

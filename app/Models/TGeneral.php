@@ -43,5 +43,10 @@ class TGeneral extends Model
     {
         return $this->hasMany(TAgency::class, 't_general_id');
     }
+
+    public function usage()
+    {
+        return $this->hasOne(TUsage::class,'t_general_id');
+    }
 }
 
