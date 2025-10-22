@@ -616,9 +616,9 @@
                   <label class="form-label">Agency Name</label>
                   <select class="form-control" name="agency[${agencyIndex}][agency_name]">
                      <option value="">Select Agency</option>
-                     <option>Agency 1</option>
-                     <option>Agency 2</option>
-                     <option>Agency 3</option>
+                     <option value="Agency 1">Agency 1</option>
+                     <option value="Agency 2">Agency 2</option>
+                     <option value="Agency 3">Agency 3</option>
                   </select>
                </div>
 
@@ -631,10 +631,10 @@
                   <label class="form-label">Assigned On</label>
                   <select class="form-control" name="agency[${agencyIndex}][assigned_on]">
                      <option value="">Select Option</option>
-                     <option>Gross Rate</option>
-                     <option>Talent Gross</option>
-                     <option>Talent Net</option>
-                     <option>Agency Comm.</option>
+                     <option value="Gross Rate">Gross Rate</option>
+                     <option value="Talent Gross">Talent Gross</option>
+                     <option value="Talent Net">Talent Net</option>
+                     <option value="Agency Comm.">Agency Comm.</option>
                   </select>
                </div>
 
@@ -746,6 +746,107 @@
          });
       }
    </script>
+
+   <!-- 5 -->
+   <script> 
+      let questionIndex = 1;
+
+      // Add new question block
+      $('#add_question').click(function (e) {
+         e.preventDefault();
+
+         let html = `
+         <div class="question_block">
+            <input type="hidden" name="questionnaires[${questionIndex}][id]" value="">
+            <div class="mb-3 col-md-3 question_1 question_block">
+               <label class="form-label">Questionnaire</label>
+               <select class="form-control" name="questionnaires[${questionIndex}][question]">
+                     <option value=""></option>
+                     <option value="Acting">Acting</option>
+                     <option value="Alcohol">Alcohol</option>
+                     <option value="Allergies">Allergies</option>
+                     <option value="Athletics">Athletics</option>
+                     <option value="Body Piercing">Body Piercing</option>
+                     <option value="Cigarettes">Cigarettes</option>
+                     <option value="Contact Lenses">Contact Lenses</option>
+               </select>
+            </div>
+            <div class="mb-3 col-md-3 question_2">
+               <label class="form-label">Status</label>
+               <select class="form-control" name="questionnaires[${questionIndex}][status]">
+                     <option value=""></option>
+                     <option value="Yes">Yes</option>
+                     <option value="No">No</option>
+                     <option value="?">?</option>
+               </select>
+            </div>
+            <div class="mb-3 col-md-3 question_3">
+               <label class="form-label">Notes</label>
+               <input type="text" name="questionnaires[${questionIndex}][notes]"
+               class="form-control"  placeholder="Enter Notes">
+            </div>
+            <button type="button" class="btn btn-danger btn-sm mt-2 remove_question">Remove</button>
+         </div>
+         `;
+
+         $('#question_wrapper').append(html);
+         questionIndex++;
+      });
+
+      // Remove question block
+      $(document).on('click', '.remove_question', function () {
+         $(this).closest('.question_block').remove();
+      });
+
+      let skillIndex = 1;
+
+      // Add new skill block
+      $('#add_skill').click(function (e) {
+         e.preventDefault();
+
+         let html = `
+         <div class="skill_block">
+            <input type="hidden" name="skills[${skillIndex}][id]" value="">
+            <div class="mb-3 col-md-3 question_1">
+                  <label class="form-label">Skill Category</label>
+                  <select class="form-control" name="skills[${skillIndex}][skill]">
+                     <option value=""></option>
+                     <option value="Category 1">Category 1</option>
+                     <option value="Category 2">Category 2</option>
+                     <option value="Category 3">Category 3</option>
+                     <option value="Category 4">Category 4</option>
+                     <option value="Category 5">Category 5</option>
+                     <option value="Category 6">Category 6</option>
+                     <option value="Category 7">Category 7</option>
+                  </select>
+            </div>
+            <div class="mb-3 col-md-3 question_2">
+                  <label class="form-label">Level</label>
+                  <select class="form-control" name="skills[${skillIndex}][level]">
+                     <option value=""></option>
+                     <option value="Beginner">Beginner</option>
+                     <option value="Intermediate">Intermediate</option>
+                     <option value="Expert">Expert</option>
+                  </select>
+            </div>
+            <div class="mb-3 col-md-3 question_3">
+                  <label class="form-label">Notes</label>
+                  <input type="text" name="skills[${skillIndex}[notes]"
+                  class="form-control"  placeholder="Enter Notes">
+            </div>
+            <button type="button" class="btn btn-danger btn-sm mt-2 remove_skill">Remove</button>
+         </div>
+         `;
+
+         $('#skill_wrapper').append(html);
+         skillIndex++;
+      });
+
+      // Remove skill block
+      $(document).on('click', '.remove_skill', function () {
+         $(this).closest('.skill_block').remove();
+      });
+   </script>    
 
    <!-- step 7-->
    <script>

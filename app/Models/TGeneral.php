@@ -48,5 +48,25 @@ class TGeneral extends Model
     {
         return $this->hasOne(TUsage::class,'t_general_id');
     }
+
+    public function stats()
+    {
+        return $this->hasOne(TStat::class,'t_general_id');
+    }
+
+    public function questionnaires()
+    {
+        return $this->hasMany(TQuestionnaire::class,'t_general_id');
+    }
+
+    public function skills()
+    {
+        return $this->hasMany(TSkill::class,'t_general_id');
+    }
+
+    public function fingerSize()
+    {
+        return $this->hasOne(TFingerSize::class,'t_general_id');
+    }
 }
 
