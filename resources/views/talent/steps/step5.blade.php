@@ -101,7 +101,7 @@
                                     <div class="mb-3 col-md-3 question_3">
                                         <label class="form-label">Notes</label>
                                         <input type="text" name="questionnaires[{{ $index }}][notes]"
-                                        value="{{q->notes ?? ''}}"
+                                      
                                         class="form-control"  placeholder="Enter Notes">
                                     </div>
                                 </div>  
@@ -132,6 +132,7 @@
                                     <div class="mb-3 col-md-3 question_3">
                                         <label class="form-label">Notes</label>
                                         <input type="text" name="questionnaires[0][notes]"
+                                        value="{{ $q->notes ?? '' }}"
                                         class="form-control"  placeholder="Enter Notes">
                                     </div>
                                 </div>    
@@ -147,20 +148,20 @@
                                     <input type="hidden" name="skills[{{ $index }}][id]" value="{{ $skill->id ?? '' }}">
                                     <div class="mb-3 col-md-3 question_1">
                                         <label class="form-label">Skill Category</label>
-                                        <select class="form-control" name="skills[${$index}][skill]">
-                                            <option value=""></option>
-                                            <option value="Category 1" {{ $skill->status == 'Category 1' ? 'selected' : '' }}>Category 1</option>
-                                            <option value="Category 2" {{ $skill->status == 'Category 2' ? 'selected' : '' }}>Category 2</option>
-                                            <option value="Category 3" {{ $skill->status == 'Category 3' ? 'selected' : '' }}>Category 3</option>
-                                            <option value="Category 4" {{ $skill->status == 'Category 4' ? 'selected' : '' }}>Category 4</option>
-                                            <option value="Category 5" {{ $skill->status == 'Category 5' ? 'selected' : '' }}>Category 5</option>
-                                            <option value="Category 6" {{ $skill->status == 'Category 6' ? 'selected' : '' }}>Category 6</option>
-                                            <option value="Category 7" {{ $skill->status == 'Category 7' ? 'selected' : '' }}>Category 7</option>
+                                        <select class="form-control" name="skills[{{$index}}][skill]">
+                                            <option value="">Select Category</option>
+                                            <option value="Category 1" {{ $skill->skill == 'Category 1' ? 'selected' : '' }}>Category 1</option>
+                                            <option value="Category 2" {{ $skill->skill == 'Category 2' ? 'selected' : '' }}>Category 2</option>
+                                            <option value="Category 3" {{ $skill->skill == 'Category 3' ? 'selected' : '' }}>Category 3</option>
+                                            <option value="Category 4" {{ $skill->skill == 'Category 4' ? 'selected' : '' }}>Category 4</option>
+                                            <option value="Category 5" {{ $skill->skill == 'Category 5' ? 'selected' : '' }}>Category 5</option>
+                                            <option value="Category 6" {{ $skill->skill == 'Category 6' ? 'selected' : '' }}>Category 6</option>
+                                            <option value="Category 7" {{ $skill->skill == 'Category 7' ? 'selected' : '' }}>Category 7</option>
                                         </select>
                                     </div>
                                     <div class="mb-3 col-md-3 question_2">
                                         <label class="form-label">Level</label>
-                                        <select class="form-control" name="skills[${$index}][level]">
+                                        <select class="form-control" name="skills[{{$index}}][level]">
                                             <option value=""></option>
                                             <option value="Beginner" {{ $skill->level == 'Beginner' ? 'selected' : '' }}>Beginner</option>
                                             <option value="Intermediate" {{ $skill->level == 'Intermediate' ? 'selected' : '' }}>Intermediate</option>
@@ -169,11 +170,11 @@
                                     </div>
                                     <div class="mb-3 col-md-3 question_3">
                                         <label class="form-label">Notes</label>
-                                        <input type="text" name="skills[${$index}][notes]"
-                                        value="{{skill->notes ?? ''}}"
+                                        <input type="text" name="skills[{{$index}}][notes]"
+                                        value="{{ $skill->notes ?? '' }}"
                                         class="form-control"  placeholder="Enter Notes">
                                     </div>
-                                <div>
+                                </div>
                             @empty
                                 <div class="skill_block">
                                     <div class="mb-3 col-md-3 question_1">

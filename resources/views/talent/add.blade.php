@@ -846,6 +846,37 @@
       $(document).on('click', '.remove_skill', function () {
          $(this).closest('.skill_block').remove();
       });
+
+      $(document).on('submit', '#statsForm', function(e){
+         e.preventDefault();
+         let form = $(this);
+         let formData = new FormData(this);
+
+         $('#formErrors').html('').addClass('d-none');
+
+         $.ajax({
+            url: "{{ route('talent.stats.store') }}",
+            method: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response){
+                  if(response.status){
+                     alert(response.message);
+                     $('#usage_id').val(response.id);
+                     $('a[href="#document_tab"]').tab('show'); // move to next tab
+                  } else {
+                     let errorList = '<ul>';
+                     $.each(response.errors, function(k, v){
+                        errorList += '<li>'+v[0]+'</li>';
+                     });
+                     errorList += '</ul>';
+                     $('#formErrors').html(errorList).removeClass('d-none');
+                    // $('html, body').animate({scrollTop: $('#formErrors').offset().top - 80}, 500);
+                  }
+            }
+         });
+      });
    </script>    
 
    <!-- step 7-->
