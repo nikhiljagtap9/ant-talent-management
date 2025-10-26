@@ -877,7 +877,37 @@
             }
          });
       });
-   </script>    
+   </script>   
+   
+   <!-- step 6 -->
+
+   <script>
+      $(document).on('submit', '#documentForm', function(e){
+         e.preventDefault();
+
+         let formData = new FormData(this);
+         $.ajax({
+               url: "{{ route('talent.documents.store') }}",
+               method: "POST",
+               data: formData,
+               processData: false,
+               contentType: false,
+               beforeSend: function() {
+                  $('.submit_btn').prop('disabled', true).text('Submitting...');
+               },
+               success: function(response) {
+                  alert('Documents saved successfully!');
+                  $('a[href="#usage_tab"]').tab('show');
+                  $('.submit_btn').prop('disabled', false).text('Submit');
+               },
+               error: function(xhr) {
+                  console.error(xhr.responseText);
+                  alert('Something went wrong!');
+                  $('.submit_btn').prop('disabled', false).text('Submit');
+               }
+         });
+      });
+   </script>
 
    <!-- step 7-->
    <script>
@@ -912,4 +942,113 @@
          });
       });
    </script>
+
+   <!-- step 10_2 -images -->
+   <script>
+      $(document).ready(function () {
+         const uploadArea = $('#uploadArea');
+         const imageInput = $('#imageInput');
+         const galleryContainer = $('#galleryContainer');
+
+         // Click on area → open file browser
+         $(document).on('click', '#uploadArea', function(e){
+            console.log('dss');
+            e.preventDefault();
+            imageInput.click();
+         });
+
+         // File input change
+         imageInput.on('change', function() {
+            let files = this.files;
+            if (files.length === 0) return;
+            uploadFiles(files);
+         });
+
+         // Drag & Drop logic
+         uploadArea.on('dragover', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).addClass('border-primary bg-light');
+         });
+
+         uploadArea.on('dragleave', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).removeClass('border-primary bg-light');
+         });
+
+         uploadArea.on('drop', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).removeClass('border-primary bg-light');
+
+            let files = e.originalEvent.dataTransfer.files;
+            if (files.length > 0) uploadFiles(files);
+         });
+
+         // Upload function
+         function uploadFiles(files) {
+            let formData = new FormData();
+            formData.append('t_general_id', $('.general_id').val());
+
+            $.each(files, function(i, file) {
+                  formData.append('images[]', file);
+            });
+
+            $.ajax({
+                  url: '{{ route("talent.images.upload") }}',
+                  type: 'POST',
+                  data: formData,
+                  contentType: false,
+                  processData: false,
+                  headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
+                  success: function(response) {
+                     if (response.status) {
+                        response.images.forEach(img => {
+                              galleryContainer.append(`
+                                 <div class="singl_img_view" data-id="${img.id}">
+                                    <img src="${img.url}" class="singl_img_view_img">
+                                    <div class="img_filter">
+                                          <a href="${img.url}" target="_blank">
+                                             <i class="ph-duotone ph-download-simple"></i>
+                                          </a>
+                                          <a href="#" class="delete-image" data-id="${img.id}">
+                                             <i class="ph-duotone ph-x-circle"></i>
+                                          </a>
+                                    </div>
+                                 </div>
+                              `);
+                        });
+                        imageInput.val('');
+                     } else {
+                        alert('Upload failed!');
+                     }
+                  },
+                  error: function() {
+                     alert('Error uploading images.');
+                  }
+            });
+         }
+
+         // Delete image
+         $(document).on('click', '.delete-image', function(e) {
+            e.preventDefault();
+            let id = $(this).data('id');
+            let container = $(this).closest('.singl_img_view');
+
+            $.ajax({
+                  url: `/talent/images/${id}`,
+                  type: 'DELETE',
+                  headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
+                  success: function(res) {
+                     if (res.status) container.remove();
+                  },
+                  error: function() {
+                     alert('Failed to delete image.');
+                  }
+            });
+         });
+      });
+   </script>
+
 @endsection

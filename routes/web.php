@@ -12,6 +12,8 @@ use App\Http\Controllers\Talent\ContactController;
 use App\Http\Controllers\Talent\AgencyController;
 use App\Http\Controllers\Talent\UsageController;
 use App\Http\Controllers\Talent\StatsController;
+use App\Http\Controllers\Talent\DocumentController;
+use App\Http\Controllers\Talent\ImageController;
 
 
 Route::get('/', function () {
@@ -50,7 +52,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/talent/agencies/list/{t_general_id}', [AgencyController::class, 'list'])->name('talent.agencies.list');
         Route::delete('/talent/agencies/delete/{id}', [AgencyController::class, 'delete'])->name('talent.agencies.delete');
         Route::post('/talent/stats/store', [StatsController::class, 'store'])->name('talent.stats.store');
+        Route::post('/talent/documents/store', [DocumentController::class, 'store'])->name('talent.documents.store');
         Route::post('/talent/usage/store', [UsageController::class, 'store'])->name('talent.usage.store');
+
+        Route::post('/talent/images/upload', [ImageController::class, 'upload'])->name('talent.images.upload');
+        Route::delete('/talent/images/{id}', [ImageController::class, 'delete'])->name('talent.images.delete');
     }); 
 
 

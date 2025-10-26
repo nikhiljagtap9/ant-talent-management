@@ -25,14 +25,17 @@ class GeneralController extends Controller
         $contacts = [];
         $agencies = [];
         $usage = null;
+        $document = null;
         $stats = null;
         $questionnaires = [];
         $skills = [];
         $fingerSize = null;   
+        $images = [];
         
         if($id){
             $general = TGeneral::with(['addresses','socialMedia','legal','contacts',
-            'agencies','usage','stats','questionnaires', 'skills', 'fingerSize'])->find($id);
+            'agencies','usage','document','stats','questionnaires', 'skills', 'fingerSize',
+            'images'])->find($id);
             if (!$general) {
                 return redirect()->back()->with('error', 'Talent not found.');
             }
@@ -42,10 +45,12 @@ class GeneralController extends Controller
             $contacts = $general->contacts;
             $agencies = $general->agencies;
             $usage = $general->usage;
+            $document = $general->document;
             $stats = $general->stats;
             $questionnaires = $general->questionnaires;
             $skills = $general->skills;
             $fingerSize = $general->fingerSize;
+            $images = $general->images;
 
             // Convert stored category (string or JSON) into array
             $categories = is_array($general->category)
@@ -55,8 +60,8 @@ class GeneralController extends Controller
 
         return view('talent.add', compact(
             'user','general', 'addresses', 'socialMedia' , 
-            'categories' ,'legal', 'contacts','agencies','usage',
-            'stats', 'questionnaires', 'skills', 'fingerSize'
+            'categories' ,'legal', 'contacts','agencies','usage','document',
+            'stats', 'questionnaires', 'skills', 'fingerSize', 'images'
         ));
     }
 

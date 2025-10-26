@@ -23,7 +23,7 @@
         <div class="clear"></div>
         <div class="card-header">
             <h5>Appointment</h5>
-            <a class="add_compns" href="#">
+            <a class="add_compns" href="{{ route('calendar')}}">
             <i class="ti ti-file-plus"></i>
             Add Appointment
             </a>
