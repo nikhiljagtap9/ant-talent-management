@@ -27,6 +27,10 @@
       <!-- [Template CSS Files] -->
       <link rel="stylesheet" href="{{ asset('assets/css/style.css')}}" id="main-style-link">
       <link rel="stylesheet" href="{{ asset('assets/css/style-preset.css')}}">
+
+      <!-- Cropper.js CSS -->
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+
    </head>
    <!-- [Head] end --><!-- [Body] Start -->
    <body data-pc-preset="preset-1" data-pc-sidebar-theme="dark" data-pc-header-theme="light" data-pc-sidebar-caption="true" data-pc-direction="ltr" data-pc-theme="light">

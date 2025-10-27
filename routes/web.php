@@ -56,6 +56,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/talent/usage/store', [UsageController::class, 'store'])->name('talent.usage.store');
 
         Route::post('/talent/images/upload', [ImageController::class, 'upload'])->name('talent.images.upload');
+        Route::post('/talent/image/rotate', [ImageController::class, 'updateRotation'])->name('talent.image.rotate');
+        Route::post('/talent/image/crop', [ImageController::class, 'saveCrop'])->name('talent.image.crop');
         Route::delete('/talent/images/{id}', [ImageController::class, 'delete'])->name('talent.images.delete');
     }); 
 

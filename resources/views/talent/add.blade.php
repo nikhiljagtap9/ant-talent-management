@@ -952,7 +952,6 @@
 
          // Click on area → open file browser
          $(document).on('click', '#uploadArea', function(e){
-            console.log('dss');
             e.preventDefault();
             imageInput.click();
          });
@@ -991,6 +990,9 @@
             let formData = new FormData();
             formData.append('t_general_id', $('.general_id').val());
 
+            // Clear old error message
+            $('#uploadError').hide().html('');
+
             $.each(files, function(i, file) {
                   formData.append('images[]', file);
             });
@@ -1009,11 +1011,21 @@
                                  <div class="singl_img_view" data-id="${img.id}">
                                     <img src="${img.url}" class="singl_img_view_img">
                                     <div class="img_filter">
+                                          <a href="">
+                                             <i class="ti ti-edit"></i>
+                                          </a>
                                           <a href="${img.url}" target="_blank">
                                              <i class="ph-duotone ph-download-simple"></i>
                                           </a>
+                                          <a href="#" class="crop-image"><i class="ph-duotone ph-crop"></i></a>
                                           <a href="#" class="delete-image" data-id="${img.id}">
                                              <i class="ph-duotone ph-x-circle"></i>
+                                          </a>
+                                          <a href="#" class="rotate-left">
+                                             <i class="ph-duotone ph-arrow-bend-up-left"></i>
+                                          </a>
+                                          <a href="#" class="rotate-right">
+                                             <i class="ph-duotone ph-arrow-bend-up-right"></i>
                                           </a>
                                     </div>
                                  </div>
@@ -1021,14 +1033,211 @@
                         });
                         imageInput.val('');
                      } else {
-                        alert('Upload failed!');
+                        // show error returned by backend
+                        $('#uploadError').text(response.message || 'Upload failed. Please try again.');
                      }
                   },
-                  error: function() {
-                     alert('Error uploading images.');
+                  error: function(xhr) {
+                     let message = 'Error uploading images.';
+
+                     if (xhr.status === 422 && xhr.responseJSON.errors) {
+                        let errors = xhr.responseJSON.errors;
+                        let errorMessages = [];
+
+                        // Loop through each validation error
+                        $.each(errors, function(field, msgs) {
+                              // Extract the index number from something like "images.0"
+                              let match = field.match(/\d+/);
+                              if (match) {
+                                 let index = parseInt(match[0]);
+                                 let fileName = files[index]?.name || `Image ${index + 1}`;
+                                 msgs.forEach(msg => {
+                                    // Replace "images.0" with actual file name
+                                    errorMessages.push(msg.replace(field, `"${fileName}"`));
+                                 });
+                              } else {
+                                 // For non-indexed fields
+                                 msgs.forEach(msg => errorMessages.push(msg));
+                              }
+                        });
+
+                        message = errorMessages.join('<br>');
+                     } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                        message = xhr.responseJSON.message;
+                     }
+
+                     // Display nicely formatted message
+                     $('#uploadError').html(message).show();
                   }
             });
          }
+
+         // rotate image
+         $(document).on('click', '.rotate-left, .rotate-right', function(e) {
+            e.preventDefault();
+
+            // Find the image inside the same container
+            let container = $(this).closest('.singl_img_view');
+            let image = container.find('.singl_img_view_img');
+            let imageId = container.data('id');
+            let currentRotation = parseInt(image.data('rotation')) || 0;
+
+            // Rotate ±90 degrees depending on which button was clicked
+            if ($(this).hasClass('rotate-left')) {
+               currentRotation -= 90;
+            } else {
+               currentRotation += 90;
+            }
+
+            // Apply rotation within same div
+            image.css({
+               'transform': `rotate(${currentRotation}deg)`,
+               'transform-origin': 'center center',
+               'transition': 'transform 0.3s ease'
+            });
+
+            // Store rotation value
+            image.data('rotation', currentRotation);
+
+            // Save rotation in DB
+            $.ajax({
+               url: '{{ route("talent.image.rotate") }}',
+               type: 'POST',
+               data: {
+                     id: imageId,
+                     rotation: currentRotation,
+                     _token: '{{ csrf_token() }}'
+               },
+               success: function(response) {
+                     console.log('Rotation saved:', response.message);
+               },
+               error: function(xhr) {
+                     console.error('Error saving rotation:', xhr.responseText);
+               }
+            });
+         });
+
+         // CROP IMAGE
+
+         let activeCropper = null;        
+         $(document).on('click', '.crop-image', function (e) {
+            e.preventDefault();
+
+            let container = $(this).closest('.singl_img_view');
+            let img = container.find('img')[0];
+
+            // Disable previous cropper (if another one was active)
+            if (activeCropper && activeCropper.image !== img) {
+               activeCropper.destroy();
+               $('.save-crop').remove();
+               $('.crop-image').removeClass('active');
+               $('.singl_img_view.crop-active')
+                     .removeClass('crop-active')
+                     .css('height', '')
+                     .css('z-index', '');
+            }
+
+            // If same image cropper is active → disable it
+            if (activeCropper && activeCropper.image === img) {
+               activeCropper.destroy();
+               activeCropper = null;
+               container.find('.save-crop').remove();
+               $(this).removeClass('active');
+               container.removeClass('crop-active').css({
+                     height: '',
+                     paddingBottom: ''
+               });
+               return;
+            }
+
+            // Activate cropper
+            activeCropper = new Cropper(img, {
+               aspectRatio: NaN,
+               viewMode: 1,
+               autoCropArea: 1,
+               background: false,
+               movable: true,
+               cropBoxResizable: true,
+            });
+
+            $(this).addClass('active');
+
+            // Show Save Crop button inside same div
+            if (container.find('.save-crop').length === 0) {
+               container.append(`
+                     <button class="btn btn-sm btn-success mt-2 save-crop">
+                        Save Crop
+                     </button>
+               `);
+            }
+
+            // Expand only this div height slightly (e.g., +100px)
+            // Also bring it above other divs so crop area edges are visible
+            container.addClass('crop-active')
+                     .css('z-index', '10')
+                     .animate({ height: container.outerHeight() + 100 }, 200);
+         });
+
+
+         // Save crop
+         $(document).on('click', '.save-crop', function() {
+            if (!activeCropper) return;
+            let container = $(this).closest('.singl_img_view');
+            let img = container.find('img');
+            let imageId = container.data('id');
+
+            let canvas = activeCropper.getCroppedCanvas({
+               width: 300,
+               height: 300,
+            });
+
+            // Replace image preview
+            img.attr('src', canvas.toDataURL());
+
+            // Clean up
+            activeCropper.destroy();
+            activeCropper = null;
+            $(this).remove();
+
+            // Reset height and padding to original
+            container.removeClass('crop-active').css({
+               height: '',
+               paddingBottom: ''
+            });
+
+            // send cropped image to backend via AJAX
+            const croppedDataURL = canvas.toDataURL('image/png');
+            $.ajax({
+               url: '{{ route("talent.image.crop") }}',
+               type: 'POST',
+               data: {
+                     id: imageId,
+                     cropped_image: croppedDataURL,
+                     _token: '{{ csrf_token() }}'
+               },
+               success: function (response) {
+                     if (response.status) {
+                        // Update image in UI
+                        $(img).attr('src', response.url + '?v=' + new Date().getTime());
+                        console.log('Cropped image saved:', response.message);
+                     }
+               },
+               error: function (xhr) {
+                     console.error('Error saving crop:', xhr.responseText);
+               },
+               complete: function () {
+                     // Clean up cropper UI
+                     if (activeCropper) {
+                        activeCropper.destroy();
+                        activeCropper = null;
+                     }
+                     container.find('.save-crop').remove();
+                     container.css({ height: '', paddingBottom: '' });
+                     container.find('.crop-image').removeClass('active');
+               }
+            });
+         });
+
 
          // Delete image
          $(document).on('click', '.delete-image', function(e) {

@@ -47,6 +47,8 @@
 <script src="https://dashboardkit.cc/assets/js/plugins/index.global.min.js"></script>
 <script src="https://dashboardkit.cc/assets/js/plugins/sweetalert2.all.min.js"></script>
 <script src="{{ asset('assets/js/application/calendar.js')}}"></script>
+<!-- Cropper.js JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 </body>
 <!-- [Body] end -->
 </html>

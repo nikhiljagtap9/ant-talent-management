@@ -1,3 +1,20 @@
+<style>
+.singl_img_view {
+    position: relative
+    transition: height 0.3s ease; 
+   /* overflow: visible !important; /* allow crop box edges to show */
+}
+
+.singl_img_view.crop-active {
+    z-index: 10; /* bring forward */
+    overflow: visible !important;
+}
+
+.gallery_images {
+    align-items: flex-start !important; /* prevent flex equal-height issue */
+}
+</style>
+
 <div class="wrp_talnt_list">
     <div class="wrp_talnt_list_1">
         All (5 / 5 images)
@@ -69,16 +86,24 @@
                 </div>
                 <div class="upload_img_text">Upload/Drop Your Image</div>                
             </div>
+            <span id="uploadError" class="text-danger mt-2"></span>
             <input type="file" id="imageInput" name="images[]" multiple style="display:none;">
 
             <div class="gallery_images d-flex flex-wrap mt-3" id="galleryContainer">
                 {{-- Existing images (if any) --}}
                 @foreach($images as $image)
                     <div class="singl_img_view" data-id="{{ $image->id }}">
-                        <img src="{{ asset('storage/'.$image->path) }}" class="singl_img_view_img">
+                        <img src="{{ asset('storage/'.$image->path) }}" 
+                        class="singl_img_view_img" data-rotation="{{ $image->rotation }}"
+                        style="transform: rotate({{ $image->rotation }}deg); 
+                        transition: transform 0.3s ease;">
                         <div class="img_filter">
+                            <a href=""><i class="ti ti-edit"></i></a>
                             <a href="{{ asset('storage/'.$image->path) }}" target="_blank"><i class="ph-duotone ph-download-simple"></i></a>
+                            <a href="#" class="crop-image"><i class="ph-duotone ph-crop"></i></a>
                             <a href="#" class="delete-image" data-id="{{ $image->id }}"><i class="ph-duotone ph-x-circle"></i></a>
+                            <a href="#" class="rotate-left"><i class="ph-duotone ph-arrow-bend-up-left"></i></a>
+                            <a href="#" class="rotate-right"><i class="ph-duotone ph-arrow-bend-up-right"></i></a>
                         </div>
                     </div>
                 @endforeach
