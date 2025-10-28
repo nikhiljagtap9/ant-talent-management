@@ -14,7 +14,7 @@ use App\Http\Controllers\Talent\UsageController;
 use App\Http\Controllers\Talent\StatsController;
 use App\Http\Controllers\Talent\DocumentController;
 use App\Http\Controllers\Talent\ImageController;
-
+use App\Http\Controllers\Talent\VideoController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -59,6 +59,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/talent/image/rotate', [ImageController::class, 'updateRotation'])->name('talent.image.rotate');
         Route::post('/talent/image/crop', [ImageController::class, 'saveCrop'])->name('talent.image.crop');
         Route::delete('/talent/images/{id}', [ImageController::class, 'delete'])->name('talent.images.delete');
+
+        Route::post('/talent/video/upload', [VideoController::class, 'uploadVideo'])->name('talent.video.upload');
+        Route::post('/talent/video/delete', [VideoController::class, 'deleteVideo'])->name('talent.video.delete');
+
+
     }); 
 
 

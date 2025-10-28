@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('t_images', function (Blueprint $table) {
+        Schema::create('t_videos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('t_general_id')->constrained('t_general')->onDelete('cascade');
-            $table->string('path');
-            $table->integer('rotation')->default(0); // stores rotation in degrees
+            $table->string('title');
+            $table->text('embed_code');
+            $table->string('download_link')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('t_images');
+        Schema::dropIfExists('t_videos');
     }
 };

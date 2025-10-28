@@ -167,45 +167,7 @@
       <!-- [ Main Content ] end -->
    </div>
 </div>
-<div class="modal fade login-modal upload_doc" id="embed_video" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-   <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content card mb-0 user-card">
-         <div class="modal-body">
-            <div class="d-flex mb-4">
-               <div class="flex-grow-1 me-3">
-                  <h4 class="f-w-500 mb-1">Embed Video</h4>
-               </div>
-               <div class="flex-shrink-0"><a href="#" class="avtar avtar-s btn-link-danger btn-pc-default" data-bs-dismiss="modal"><i class="ti ti-x f-20"></i></a></div>
-            </div>
-            <div class="">
-               <form class="wrap_form">
-                  <div class="mb-6 col-md-6 video_emb1" bis_skin_checked="1">
-                     <label class="form-label">Video title</label>
-                     <input type="text" class="form-control" placeholder="Enter Video title">
-                  </div>
-                  <div class="mb-6 col-md-6 video_emb1" bis_skin_checked="1">
-                     <label class="form-label">Embed Code</label>
-                     <input type="text" class="form-control" placeholder="Enter Embed Code">
-                  </div>
-                  <div class="mb-6 col-md-6 video_emb1" bis_skin_checked="1">
-                     <label class="form-label">Video Download Link</label>
-                     <input type="text" class="form-control" placeholder="Enter Video Download Link">
-                  </div>
-                  <div class="mb-6 col-md-6 video_emb1" bis_skin_checked="1">
-                     <label class="form-label">Description</label>
-                     <textarea class="form-control" placeholder="Enter Description" rows="3" ></textarea>
-                  </div>
-                  <div class="clear"></div>
-                  <div class="clear" bis_skin_checked="1"></div>
-                  <button type="submit" class="submit_btn flot_right flot_right_pop">Submit</button>
-               </form>
-            </div>
-            <div class="clear"></div>
-            <div class="clear"></div>
-         </div>
-      </div>
-   </div>
-</div>
+
 <div class="modal fade login-modal upload_doc" id="login-modal" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content card mb-0 user-card">
@@ -650,22 +612,23 @@
 
                <div class="mt-2">
                   <label class="child_as">
-                     <input type="checkbox" name="agency[${agencyIndex}][mother_agency]">
+                     <input type="checkbox" class="child_as_check" name="agency[${agencyIndex}][mother_agency]">
                      <div class="child_as_lbl">Mother Agency</div>
                   </label>
 
+
                   <label class="child_as">
-                     <input type="checkbox" name="agency[${agencyIndex}][other_mother_agency]">
+                     <input type="checkbox" class="child_as_check"  name="agency[${agencyIndex}][other_mother_agency]">
                      <div class="child_as_lbl">Other Mother Agency</div>
                   </label>
 
                   <label class="child_as">
-                     <input type="checkbox" name="agency[${agencyIndex}][placement]">
+                     <input type="checkbox" class="child_as_check" name="agency[${agencyIndex}][placement]">
                      <div class="child_as_lbl">Placement</div>
                   </label>
 
                   <label class="child_as">
-                     <input type="checkbox" name="agency[${agencyIndex}][contract_received]">
+                     <input type="checkbox" class="child_as_check" name="agency[${agencyIndex}][contract_received]">
                      <div class="child_as_lbl">Contract Received</div>
                   </label>
                </div>
@@ -696,6 +659,7 @@
             success: function(response) {
                   alert(response.message);
                   loadAgencies(); // reload list
+                  $('a[href="#stats_tab"]').tab('show');
             },
             error: function(xhr) {
                   alert('Error: ' + xhr.responseJSON.message);
@@ -1032,6 +996,7 @@
                               `);
                         });
                         imageInput.val('');
+                        updateImageCounts(); // refresh count
                      } else {
                         // show error returned by backend
                         $('#uploadError').text(response.message || 'Upload failed. Please try again.');
@@ -1242,22 +1207,279 @@
          // Delete image
          $(document).on('click', '.delete-image', function(e) {
             e.preventDefault();
+
             let id = $(this).data('id');
             let container = $(this).closest('.singl_img_view');
 
-            $.ajax({
-                  url: `/talent/images/${id}`,
-                  type: 'DELETE',
-                  headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
-                  success: function(res) {
-                     if (res.status) container.remove();
-                  },
-                  error: function() {
-                     alert('Failed to delete image.');
-                  }
+            Swal.fire({
+               title: 'Are you sure?',
+               text: "This image will be permanently deleted.",
+               icon: 'warning',
+               showCancelButton: true,
+               confirmButtonColor: '#d33',
+               cancelButtonColor: '#6c757d',
+               confirmButtonText: 'Yes, delete it!',
+               background: '#fff'
+            }).then((result) => {
+               if (result.isConfirmed) {
+                     $.ajax({
+                        url: `/talent/images/${id}`,
+                        type: 'DELETE',
+                        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                        success: function(res) {
+                           if (res.status) {
+                                 Swal.fire({
+                                    icon: 'success',
+                                    title: 'Deleted!',
+                                    text: res.message || 'Image deleted successfully.',
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                 });
+                                 container.fadeOut(400, function() {
+                                    $(this).remove();
+                                    updateImageCounts(); // refresh count
+                                 });
+                           } else {
+                                 Swal.fire('Error', res.message || 'Unable to delete image.', 'error');
+                           }
+                        },
+                        error: function() {
+                           Swal.fire('Error', 'Something went wrong. Please try again.', 'error');
+                        }
+                     });
+               }
             });
          });
+
       });
+
+      // image count
+      function updateImageCounts() {
+         let totalImages = $('#image_panl .tab_img_galry .singl_img_view').length;
+         console.log('fdffdf' + totalImages);
+         $('#allImageCount').text(totalImages);
+      }
+      
    </script>
+
+   <!-- step 10_3 -video -->
+   <script>
+      
+   // Call after page loads
+   $(document).ready(function() {
+      updateVideoCounts();
+      updateImageCounts();
+   });
+
+   $(document).on('submit', '#videoForm', function(e) {
+      e.preventDefault();
+      saveVideo($(this));
+   });
+
+   function saveVideo(form) {
+    let formData = new FormData(form[0]);
+    formData.append('t_general_id', $('.general_id').val());
+
+    // Clear old errors
+    $('#videoError').hide().html('');
+
+    $.ajax({
+        url: '{{ route("talent.video.upload") }}',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+
+        success: function(response) {
+            if (response.status) {
+            //   toastr.success(response.message);
+
+               // Close modal + reset form
+               $('#embed_video').modal('hide');
+               form[0].reset();
+               $('#video_id').val('');
+
+               // Extract YouTube thumbnail if it's a YouTube embed
+               let thumbnailUrl = getThumbnailFromEmbed(response.video.embed_code);
+
+               // Build video thumbnail block
+               let html = `
+                     <div class="singl_img_view" data-id="${response.video.id}">
+                        <img src="${thumbnailUrl}" class="singl_img_view_img" alt="${response.video.title}">
+                        <div class="ply_btn_vid">
+                           <a class="playVideoBtn" data-embed='${response.video.embed_code}'>
+                                 <i class="ph-duotone ph-play"></i>
+                           </a>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="img_filter">
+                           <a href="#" class="editVideoBtn"
+                                 data-id="${response.video.id}"
+                                 data-title="${response.video.title}"
+                                 data-embed="${response.video.embed_code}"
+                                 data-download="${response.video.download_link ?? ''}"
+                                 data-description="${response.video.description ?? ''}">
+                                 <i class="ti ti-edit"></i>
+                           </a>
+                           <a href="#" class="deleteVideo" data-id="${response.video.id}">
+                                 <i class="ph-duotone ph-x-circle"></i>
+                           </a>
+                        </div>
+                     </div>
+               `;
+
+               let existing = $(`.singl_img_view[data-id="${response.video.id}"]`);
+               
+               if (existing.length) {
+                     existing.replaceWith(html);
+               } else {
+                     $('.tab_video_galry').append(html);
+               }
+               // update count dynamically
+               updateVideoCounts();
+            } else {
+               $('#videoError').text(response.message || 'Save failed. Please try again.').show();
+            }
+         },
+        error: function(xhr) {
+            let message = 'Error saving video.';
+
+            if (xhr.status === 422 && xhr.responseJSON.errors) {
+                let errors = xhr.responseJSON.errors;
+                let errorMessages = [];
+
+                $.each(errors, function(field, msgs) {
+                    msgs.forEach(msg => errorMessages.push(msg));
+                });
+
+                message = errorMessages.join('<br>');
+            } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                message = xhr.responseJSON.message;
+            }
+
+            $('#videoError').html(message).show();
+        }
+    });
+   }
+
+   function getThumbnailFromEmbed(embedCode) {
+    try {
+        let match = embedCode.match(/(?:youtube\.com\/embed\/|youtu\.be\/)([A-Za-z0-9_-]+)/);
+        if (match && match[1]) {
+            return `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`;
+        }
+    } catch (e) {
+        console.warn("Could not extract YouTube thumbnail", e);
+    }
+    // Fallback generic thumbnail
+    return 'assets/images/default-video-thumb.jpg';
+   }
+
+
+   $(document).on('click', '.playVideoBtn', function() {
+      let embedCode = $(this).data('embed');
+
+      // If it's just a URL, wrap it inside an iframe
+      let iframeHtml = '';
+      if (embedCode.includes('<iframe')) {
+         iframeHtml = embedCode; // already full iframe embed
+      } else {
+         iframeHtml = `<iframe width="100%" height="400" src="${embedCode}?autoplay=1" frameborder="0" allowfullscreen></iframe>`;
+      }
+
+      // You can show this in a popup/modal for a cleaner look
+      Swal.fire({
+         html: `<div class="ratio ratio-16x9">${iframeHtml}</div>
+               <button id="closeVideoPopup" class="btn btn-danger btn-sm">Close</button>
+         `,
+         width: '60%',
+         showConfirmButton: false,
+         background: 'transparent',
+         customClass: { popup: 'no-background' },
+         didOpen: () => {
+               // handle manual close button
+               $('#closeVideoPopup').on('click', function() {
+                  Swal.close();
+               });
+         },
+         didClose: () => {
+               // stop video on close
+               $('.swal2-container iframe').attr('src', '');
+         }
+      });
+   });
+
+   // Populate modal for edit
+   $(document).on('click', '.editVideoBtn', function(e) {
+      e.preventDefault();
+
+      $('#video_id').val($(this).data('id'));
+      $('#video_title').val($(this).data('title'));
+      $('#video_embed').val($(this).data('embed'));
+      $('#video_download').val($(this).data('download'));
+      $('#video_description').val($(this).data('description'));
+
+      $('#embed_video').modal('show');
+   });
+
+   // delete video
+   $(document).on('click', '.deleteVideo', function(e) {
+      e.preventDefault();
+
+      let videoId = $(this).data('id');
+      let videoDiv = $(this).closest('.singl_img_view');
+
+      Swal.fire({
+         title: 'Are you sure?',
+         text: "This video will be permanently deleted.",
+         icon: 'warning',
+         showCancelButton: true,
+         confirmButtonColor: '#d33',
+         cancelButtonColor: '#6c757d',
+         confirmButtonText: 'Yes, delete it!',
+         background: '#fff'
+      }).then((result) => {
+         if (result.isConfirmed) {
+               $.ajax({
+                  url: '{{ route("talent.video.delete") }}', // Adjust route name
+                  type: 'POST',
+                  data: {
+                     _token: '{{ csrf_token() }}',
+                     id: videoId
+                  },
+                  success: function(response) {
+                     if (response.status) {
+                           Swal.fire({
+                              icon: 'success',
+                              title: 'Deleted!',
+                              text: response.message || 'Video has been deleted.',
+                              timer: 1500,
+                              showConfirmButton: false
+                           });
+                           
+                           videoDiv.fadeOut(400, function() {         
+                              $(this).remove();    
+                              updateVideoCounts(); // refresh counts                          
+                           });
+                     } else {
+                           Swal.fire('Error', response.message || 'Unable to delete video.', 'error');
+                     }
+                  },
+                  error: function() {
+                     Swal.fire('Error', 'Something went wrong. Please try again.', 'error');
+                  }
+               });
+         }
+      });
+   });
+
+   // video count
+   function updateVideoCounts() {
+      let totalVideos = $('#video_panl .tab_video_galry .singl_img_view').length;
+      $('#allCount').text(totalVideos);
+   }
+
+   </script> 
 
 @endsection

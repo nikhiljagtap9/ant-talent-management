@@ -31,11 +31,12 @@ class GeneralController extends Controller
         $skills = [];
         $fingerSize = null;   
         $images = [];
+        $videos = [];
         
         if($id){
             $general = TGeneral::with(['addresses','socialMedia','legal','contacts',
             'agencies','usage','document','stats','questionnaires', 'skills', 'fingerSize',
-            'images'])->find($id);
+            'images','videos'])->find($id);
             if (!$general) {
                 return redirect()->back()->with('error', 'Talent not found.');
             }
@@ -51,6 +52,7 @@ class GeneralController extends Controller
             $skills = $general->skills;
             $fingerSize = $general->fingerSize;
             $images = $general->images;
+            $videos = $general->videos;
 
             // Convert stored category (string or JSON) into array
             $categories = is_array($general->category)
@@ -61,7 +63,7 @@ class GeneralController extends Controller
         return view('talent.add', compact(
             'user','general', 'addresses', 'socialMedia' , 
             'categories' ,'legal', 'contacts','agencies','usage','document',
-            'stats', 'questionnaires', 'skills', 'fingerSize', 'images'
+            'stats', 'questionnaires', 'skills', 'fingerSize', 'images','videos'
         ));
     }
 

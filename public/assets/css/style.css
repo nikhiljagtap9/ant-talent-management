@@ -34388,7 +34388,7 @@ padding-top: 30px;
      gap: 12px;
 }
  .video_panl .img_filter{
-     display: none;
+    /* display: none; */
 }
  .rept_po2{
      margin-top: 20px;

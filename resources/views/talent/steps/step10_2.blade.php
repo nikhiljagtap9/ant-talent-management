@@ -17,7 +17,7 @@
 
 <div class="wrp_talnt_list">
     <div class="wrp_talnt_list_1">
-        All (5 / 5 images)
+        All (<span id="allImageCount">0</span> images)
     </div>
     <div class="wrp_talnt_list_2">
         <div class="sub_p-tablist" role="tablist" aria-label="Sample tabs">
@@ -39,11 +39,11 @@
         </div>
         <div class="clear"></div>
     </div>
-    </div>
-    <div class="clear"></div>
-    <div class="sub_p-panel sub_p-active" role="tabpanel"
+</div>
+<div class="clear"></div>
+<div class="sub_p-panel sub_p-active" role="tabpanel"
     id="sub_p-panel-1" aria-labelledby="sub_p-tab-1">
-    <div class="">
+    <div class="" id="image_panl">
         <div class="singl_socil" bis_skin_checked="1">
             <div class="mb-3 col-md-2 smal_5" bis_skin_checked="1">
                 <label class="form-label">Board </label>
@@ -112,8 +112,8 @@
         </div>
         <div class="clear"></div>
     </div>
-    </div>
-    <div class="sub_p-panel" role="tabpanel"
+</div>
+<div class="sub_p-panel" role="tabpanel"
     id="sub_p-panel-2" aria-labelledby="sub_p-tab-2">
     <div class="">
         <div class="singl_socil" bis_skin_checked="1">
@@ -411,8 +411,8 @@
         </div>
         <div class="clear"></div>
     </div>
-    </div>
-    <div class="sub_p-panel" role="tabpanel"
+</div>
+<div class="sub_p-panel" role="tabpanel"
     id="sub_p-panel-3" aria-labelledby="sub_p-tab-3">
     <div class="603">
         <div class="singl_socil" bis_skin_checked="1">

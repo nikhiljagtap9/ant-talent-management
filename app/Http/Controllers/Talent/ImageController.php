@@ -72,13 +72,13 @@ class ImageController extends Controller
     }
 
     public function updateRotation(Request $request)
-    {
+    {   
         $request->validate([
-            'id' => 'required|integer|exists:images,id',
+            'id' => 'required|integer|exists:t_images,id',
             'rotation' => 'required|integer',
         ]);
-
-        $image = Image::find($request->id);
+        
+        $image = TImage::find($request->id);
         $image->rotation = $request->rotation;
         $image->save();
 
