@@ -49,6 +49,9 @@
 <script src="{{ asset('assets/js/application/calendar.js')}}"></script>
 <!-- Cropper.js JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+<!-- jQuery UI (needed for sortable) -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 </body>
 <!-- [Body] end -->
 </html>

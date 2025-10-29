@@ -57,29 +57,16 @@
     <div class="tab_img_galry galry_2 galry_2_right" id="rightGallery" style="display:none;">
         <div class="clear"></div>
         <div class="top_br_port">
-            <div class="art_titl_as">
+            <div class="art_titl_as" id="albumTitle">
                 Artist
             </div>
             <div class="btn_arts_al">
-                <a href="">
-                Edit
-                </a>
-                <a href="">
-                Copy
-                </a>
-                <a href="">
-                Rename
-                </a>
-                <a href="">
-                Delete
-                </a>
-                <a href="">
-                View
-                </a>
-                <a href="">
-                Sort
-                </a>
-                <div class="clear"></div>
+                <a href="#" class="edit-album">Edit</a>
+                <a href="#" class="copy-album">Copy</a>
+                <a href="#" class="rename-album">Rename</a>
+                <a href="#" class="delete-album">Delete</a>
+                <a href="#" class="view-album">View</a>
+                <a href="#" class="sort-album">Sort</a>
             </div>
         </div>
         <div class="clear"></div>

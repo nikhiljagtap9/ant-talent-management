@@ -18,6 +18,8 @@ class TAlbum extends Model
 
     public function images()
     {
-        return $this->belongsToMany(TImage::class, 't_album_images', 'album_id', 'image_id');
+        return $this->belongsToMany(TImage::class, 't_album_images', 'album_id', 'image_id')
+               ->withPivot(['id', 'order'])
+                ->orderBy('t_album_images.order', 'asc');
     }
 }

@@ -1558,6 +1558,8 @@
 
             $('.crt_port_1').removeClass('crt_port_1_actv');
             $(this).addClass('crt_port_1_actv');
+            let albumName = $(this).text().trim();
+            $('#albumTitle').text(albumName);
             $('#rightGallery').fadeIn();
             currentAlbum = $(this).data('album');
             
@@ -1639,6 +1641,241 @@
             }
          });
 
+
+         // Rename album
+         $(document).on('click', '.rename-album', function(e) {
+            e.preventDefault();
+
+            if (!currentAlbum) {
+                  Swal.fire('Please select an album first.');
+                  return;
+            }
+
+            Swal.fire({
+                  title: 'Rename Album',
+                  input: 'text',
+                  inputLabel: 'Enter new album name',
+                  inputValue: $('#albumTitle').text(),
+                  showCancelButton: true,
+                  confirmButtonText: 'Rename',
+                  inputValidator: (value) => {
+                     if (!value.trim()) return 'Please enter a name!';
+                  }
+            }).then(result => {
+                  if (result.isConfirmed) {
+                     $.post('{{ route("talent.albums.rename") }}', {
+                        _token: '{{ csrf_token() }}',
+                        album_id: currentAlbum,
+                        name: result.value
+                     }).done(res => {
+                        if (res.status) {
+                              $('#albumTitle').text(result.value);
+                              // Update left album list
+                              $(`#albumList .crt_port_1[data-album="${currentAlbum}"]`).text(result.value);
+                              
+                              Swal.fire('Renamed!', res.message || 'Album renamed successfully.', 'success');
+                        } else {
+                              Swal.fire('Error', res.message || 'Rename failed.', 'error');
+                        }
+                     }).fail(() => Swal.fire('Error', 'Something went wrong.', 'error'));
+                  }
+            });
+         });
+
+         // Delete album
+         $(document).on('click', '.delete-album', function(e) {
+            e.preventDefault();
+
+            if (!currentAlbum) {
+                  Swal.fire('Please select an album first.');
+                  return;
+            }
+
+            Swal.fire({
+                  title: 'Are you sure?',
+                  text: 'This will delete the album and all its images.',
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonText: 'Yes, delete it',
+                  cancelButtonText: 'Cancel'
+            }).then(result => {
+                  if (result.isConfirmed) {
+                     $.post('{{ route("talent.albums.delete") }}', {
+                        _token: '{{ csrf_token() }}',
+                        album_id: currentAlbum
+                     }).done(res => {
+                        if (res.status) {
+                              $('#albumTitle').text('Select an Album');
+                              $('#albumImages').html('<p class="text-muted">Select an album to view or drag images here.</p>');
+                              Swal.fire('Deleted!', res.message || 'Album deleted successfully.', 'success');
+                              // Remove from UI
+                              $(`#albumList .crt_port_1[data-album="${currentAlbum}"]`).remove();
+                              $('#rightGallery').hide();
+                              currentAlbum = null;
+                              
+                        } else {
+                              Swal.fire('Error', res.message || 'Delete failed.', 'error');
+                        }
+                     }).fail(() => Swal.fire('Error', 'Something went wrong.', 'error'));
+                  }
+            });
+         });
+
+         // Sorting 
+         // Enable drag & drop sorting when Sort button is clicked
+         $(document).on('click', '.sort-album', function (e) {
+            e.preventDefault();
+
+            // Check if there are any images
+            if ($('#albumImages').children().length === 0) {
+               Swal.fire({
+                     icon: 'info',
+                     title: 'No images to sort',
+                     text: 'Please upload some images before sorting.',
+               });
+               return;
+            }
+
+            // Activate sortable mode
+            $('#albumImages')
+               .addClass('sorting-active')
+               .sortable({
+                  //   placeholder: "ui-state-highlight",
+                     cursor: "move",
+                     tolerance: "pointer",
+                     start: function (event, ui) {
+                        ui.item.addClass('dragging');
+                     },
+                     stop: function (event, ui) {
+                        ui.item.removeClass('dragging');
+                     },
+                     update: function (event, ui) {
+                        let sortedIDs = $(this).sortable('toArray', { attribute: 'data-id' });
+
+                        // Confirm before saving
+                        Swal.fire({
+                           title: 'Save new order?',
+                           text: 'Do you want to update the image order?',
+                           icon: 'question',
+                           showCancelButton: true,
+                           confirmButtonColor: '#3085d6',
+                           cancelButtonColor: '#d33',
+                           confirmButtonText: 'Yes, save it!'
+                        }).then((result) => {
+                           if (result.isConfirmed) {
+                                 $.ajax({
+                                    url: `{{ url('/talent/albums') }}/${currentAlbum}/sort`,
+                                    type: 'POST',
+                                    data: {
+                                       _token: '{{ csrf_token() }}',
+                                       order: sortedIDs
+                                    },
+                                    success: function (res) {
+                                       if (res.success) {
+                                             Swal.fire({
+                                                icon: 'success',
+                                                title: 'Updated!',
+                                                text: 'Image order updated successfully.',
+                                                timer: 1500,
+                                                showConfirmButton: false
+                                             });
+                                       } else {
+                                             Swal.fire({
+                                                icon: 'error',
+                                                title: 'Oops...',
+                                                text: 'Please Select sort button first.'
+                                             });
+                                       }
+                                    },
+                                    error: function () {
+                                       Swal.fire({
+                                             icon: 'error',
+                                             title: 'Server Error',
+                                             text: 'Unable to update order.'
+                                       });
+                                    }
+                                 });
+                           }
+                        });
+                     }
+               });
+            
+            // Visual highlight for sorting mode
+            Swal.fire({
+               title: 'Sort Mode Activated',
+               text: 'Drag and drop the images to change their order.',
+               icon: 'info',
+               timer: 2000,
+               showConfirmButton: false
+            });
+         });
+
+        
+         // Handle zoom (open full image in modal or new tab)
+         $(document).on('click', '.album-zoom-image', function (e) {
+            e.preventDefault();
+            let imageUrl = $(this).data('url');
+
+            Swal.fire({
+               imageUrl: imageUrl,
+               imageAlt: 'Image Preview',
+               showConfirmButton: false,
+               background: '#000',
+               backdrop: 'rgba(0,0,0,0.9)',
+               width: 'auto',
+               padding: 0,
+               customClass: {
+                     image: 'rounded-lg'
+               }
+            });
+         });
+
+         // delete image in album
+         $(document).on('click', '.album-delete-image', function (e) {
+            e.preventDefault();
+
+            let imageId = $(this).data('id');
+            let imageBox = $(this).closest('.singl_img_view');
+
+            Swal.fire({
+               title: 'Delete this image?',
+               text: 'This will remove the image from this album.',
+               icon: 'warning',
+               showCancelButton: true,
+               confirmButtonColor: '#d33',
+               cancelButtonColor: '#3085d6',
+               confirmButtonText: 'Yes, delete it'
+            }).then((result) => {
+               if (result.isConfirmed) {
+                     $.ajax({
+                        url: `{{ url('/talent/albums/delete-image') }}/${imageId}`,
+                        type: 'DELETE',
+                        data: {
+                           _token: '{{ csrf_token() }}'
+                        },
+                        success: function (res) {
+                           if (res.success) {
+                                 Swal.fire({
+                                    icon: 'success',
+                                    title: 'Deleted!',
+                                    text: 'Image removed from album.',
+                                    timer: 1200,
+                                    showConfirmButton: false
+                                 });
+                                 imageBox.fadeOut(400, function () {
+                                    $(this).remove();
+                                 });
+                           } else {
+                                 Swal.fire('Error', res.message || 'Failed to delete image.', 'error');
+                           }
+                        },
+                        error: function () {
+                           Swal.fire('Error', 'Server error occurred.', 'error');
+                        }
+                     });
+               }
+            });
+         });
 
       });
 

@@ -66,8 +66,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::post('/talent/albums/store', [AlbumController::class, 'store'])->name('talent.albums.store');
         Route::post('/talent/albums/add-image', [AlbumController::class, 'addImage'])->name('talent.albums.addImage');
+        Route::delete('/talent/albums/delete-image/{id}', [AlbumController::class, 'deleteImage'])->name('talent.albums.deleteImage');
         Route::get('/talent/albums/{id}/images', [AlbumController::class, 'getAlbumImages'])->name('talent.albums.getImages');
         Route::get('/talent/images', [AlbumController::class, 'getImages'])->name('talent.images.get');
+        Route::post('/talent/albums/rename', [AlbumController::class, 'rename'])->name('talent.albums.rename');
+        Route::post('/talent/albums/delete', [AlbumController::class, 'delete'])->name('talent.albums.delete');
+        Route::post('/talent/albums/{album}/sort', [AlbumController::class, 'sortImages']);
 
     }); 
 
