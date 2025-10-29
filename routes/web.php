@@ -15,6 +15,7 @@ use App\Http\Controllers\Talent\StatsController;
 use App\Http\Controllers\Talent\DocumentController;
 use App\Http\Controllers\Talent\ImageController;
 use App\Http\Controllers\Talent\VideoController;
+use App\Http\Controllers\Talent\AlbumController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -63,6 +64,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/talent/video/upload', [VideoController::class, 'uploadVideo'])->name('talent.video.upload');
         Route::post('/talent/video/delete', [VideoController::class, 'deleteVideo'])->name('talent.video.delete');
 
+        Route::post('/talent/albums/store', [AlbumController::class, 'store'])->name('talent.albums.store');
+        Route::post('/talent/albums/add-image', [AlbumController::class, 'addImage'])->name('talent.albums.addImage');
+        Route::get('/talent/albums/{id}/images', [AlbumController::class, 'getAlbumImages'])->name('talent.albums.getImages');
+        Route::get('/talent/images', [AlbumController::class, 'getImages'])->name('talent.images.get');
 
     }); 
 

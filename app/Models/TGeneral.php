@@ -83,5 +83,10 @@ class TGeneral extends Model
     {
         return $this->hasMany(TVideo::class, 't_general_id');
     }
+
+    public function albums()
+    {
+        return $this->hasMany(TAlbum::class, 't_general_id');
+    }
 }
 

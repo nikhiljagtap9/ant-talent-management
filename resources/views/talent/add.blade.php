@@ -1256,7 +1256,6 @@
       // image count
       function updateImageCounts() {
          let totalImages = $('#image_panl .tab_img_galry .singl_img_view').length;
-         console.log('fdffdf' + totalImages);
          $('#allImageCount').text(totalImages);
       }
       
@@ -1265,221 +1264,405 @@
    <!-- step 10_3 -video -->
    <script>
       
-   // Call after page loads
-   $(document).ready(function() {
-      updateVideoCounts();
-      updateImageCounts();
-   });
+      // Call after page loads
+      $(document).ready(function() {
+         updateVideoCounts();
+         updateImageCounts();
+      });
 
-   $(document).on('submit', '#videoForm', function(e) {
-      e.preventDefault();
-      saveVideo($(this));
-   });
+      $(document).on('submit', '#videoForm', function(e) {
+         e.preventDefault();
+         saveVideo($(this));
+      });
 
-   function saveVideo(form) {
-    let formData = new FormData(form[0]);
-    formData.append('t_general_id', $('.general_id').val());
+      function saveVideo(form) {
+      let formData = new FormData(form[0]);
+      formData.append('t_general_id', $('.general_id').val());
 
-    // Clear old errors
-    $('#videoError').hide().html('');
+      // Clear old errors
+      $('#videoError').hide().html('');
 
-    $.ajax({
-        url: '{{ route("talent.video.upload") }}',
-        type: 'POST',
-        data: formData,
-        contentType: false,
-        processData: false,
-        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+      $.ajax({
+         url: '{{ route("talent.video.upload") }}',
+         type: 'POST',
+         data: formData,
+         contentType: false,
+         processData: false,
+         headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
 
-        success: function(response) {
-            if (response.status) {
-            //   toastr.success(response.message);
+         success: function(response) {
+               if (response.status) {
+               //   toastr.success(response.message);
 
-               // Close modal + reset form
-               $('#embed_video').modal('hide');
-               form[0].reset();
-               $('#video_id').val('');
+                  // Close modal + reset form
+                  $('#embed_video').modal('hide');
+                  form[0].reset();
+                  $('#video_id').val('');
 
-               // Extract YouTube thumbnail if it's a YouTube embed
-               let thumbnailUrl = getThumbnailFromEmbed(response.video.embed_code);
+                  // Extract YouTube thumbnail if it's a YouTube embed
+                  let thumbnailUrl = getThumbnailFromEmbed(response.video.embed_code);
 
-               // Build video thumbnail block
-               let html = `
-                     <div class="singl_img_view" data-id="${response.video.id}">
-                        <img src="${thumbnailUrl}" class="singl_img_view_img" alt="${response.video.title}">
-                        <div class="ply_btn_vid">
-                           <a class="playVideoBtn" data-embed='${response.video.embed_code}'>
-                                 <i class="ph-duotone ph-play"></i>
-                           </a>
+                  // Build video thumbnail block
+                  let html = `
+                        <div class="singl_img_view" data-id="${response.video.id}">
+                           <img src="${thumbnailUrl}" class="singl_img_view_img" alt="${response.video.title}">
+                           <div class="ply_btn_vid">
+                              <a class="playVideoBtn" data-embed='${response.video.embed_code}'>
+                                    <i class="ph-duotone ph-play"></i>
+                              </a>
+                           </div>
+                           <div class="clear"></div>
+                           <div class="img_filter">
+                              <a href="#" class="editVideoBtn"
+                                    data-id="${response.video.id}"
+                                    data-title="${response.video.title}"
+                                    data-embed="${response.video.embed_code}"
+                                    data-download="${response.video.download_link ?? ''}"
+                                    data-description="${response.video.description ?? ''}">
+                                    <i class="ti ti-edit"></i>
+                              </a>
+                              <a href="#" class="deleteVideo" data-id="${response.video.id}">
+                                    <i class="ph-duotone ph-x-circle"></i>
+                              </a>
+                           </div>
                         </div>
-                        <div class="clear"></div>
-                        <div class="img_filter">
-                           <a href="#" class="editVideoBtn"
-                                 data-id="${response.video.id}"
-                                 data-title="${response.video.title}"
-                                 data-embed="${response.video.embed_code}"
-                                 data-download="${response.video.download_link ?? ''}"
-                                 data-description="${response.video.description ?? ''}">
-                                 <i class="ti ti-edit"></i>
-                           </a>
-                           <a href="#" class="deleteVideo" data-id="${response.video.id}">
-                                 <i class="ph-duotone ph-x-circle"></i>
-                           </a>
-                        </div>
-                     </div>
-               `;
+                  `;
 
-               let existing = $(`.singl_img_view[data-id="${response.video.id}"]`);
-               
-               if (existing.length) {
-                     existing.replaceWith(html);
+                  let existing = $(`.singl_img_view[data-id="${response.video.id}"]`);
+                  
+                  if (existing.length) {
+                        existing.replaceWith(html);
+                  } else {
+                        $('.tab_video_galry').append(html);
+                  }
+                  // update count dynamically
+                  updateVideoCounts();
                } else {
-                     $('.tab_video_galry').append(html);
+                  $('#videoError').text(response.message || 'Save failed. Please try again.').show();
                }
-               // update count dynamically
-               updateVideoCounts();
-            } else {
-               $('#videoError').text(response.message || 'Save failed. Please try again.').show();
-            }
-         },
-        error: function(xhr) {
-            let message = 'Error saving video.';
+            },
+         error: function(xhr) {
+               let message = 'Error saving video.';
 
-            if (xhr.status === 422 && xhr.responseJSON.errors) {
-                let errors = xhr.responseJSON.errors;
-                let errorMessages = [];
+               if (xhr.status === 422 && xhr.responseJSON.errors) {
+                  let errors = xhr.responseJSON.errors;
+                  let errorMessages = [];
 
-                $.each(errors, function(field, msgs) {
-                    msgs.forEach(msg => errorMessages.push(msg));
-                });
+                  $.each(errors, function(field, msgs) {
+                     msgs.forEach(msg => errorMessages.push(msg));
+                  });
 
-                message = errorMessages.join('<br>');
-            } else if (xhr.responseJSON && xhr.responseJSON.message) {
-                message = xhr.responseJSON.message;
-            }
+                  message = errorMessages.join('<br>');
+               } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                  message = xhr.responseJSON.message;
+               }
 
-            $('#videoError').html(message).show();
-        }
-    });
-   }
-
-   function getThumbnailFromEmbed(embedCode) {
-    try {
-        let match = embedCode.match(/(?:youtube\.com\/embed\/|youtu\.be\/)([A-Za-z0-9_-]+)/);
-        if (match && match[1]) {
-            return `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`;
-        }
-    } catch (e) {
-        console.warn("Could not extract YouTube thumbnail", e);
-    }
-    // Fallback generic thumbnail
-    return 'assets/images/default-video-thumb.jpg';
-   }
-
-
-   $(document).on('click', '.playVideoBtn', function() {
-      let embedCode = $(this).data('embed');
-
-      // If it's just a URL, wrap it inside an iframe
-      let iframeHtml = '';
-      if (embedCode.includes('<iframe')) {
-         iframeHtml = embedCode; // already full iframe embed
-      } else {
-         iframeHtml = `<iframe width="100%" height="400" src="${embedCode}?autoplay=1" frameborder="0" allowfullscreen></iframe>`;
+               $('#videoError').html(message).show();
+         }
+      });
       }
 
-      // You can show this in a popup/modal for a cleaner look
-      Swal.fire({
-         html: `<div class="ratio ratio-16x9">${iframeHtml}</div>
-               <button id="closeVideoPopup" class="btn btn-danger btn-sm">Close</button>
-         `,
-         width: '60%',
-         showConfirmButton: false,
-         background: 'transparent',
-         customClass: { popup: 'no-background' },
-         didOpen: () => {
-               // handle manual close button
-               $('#closeVideoPopup').on('click', function() {
-                  Swal.close();
-               });
-         },
-         didClose: () => {
-               // stop video on close
-               $('.swal2-container iframe').attr('src', '');
+      function getThumbnailFromEmbed(embedCode) {
+      try {
+         let match = embedCode.match(/(?:youtube\.com\/embed\/|youtu\.be\/)([A-Za-z0-9_-]+)/);
+         if (match && match[1]) {
+               return `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`;
          }
+      } catch (e) {
+         console.warn("Could not extract YouTube thumbnail", e);
+      }
+      // Fallback generic thumbnail
+      return 'assets/images/default-video-thumb.jpg';
+      }
+
+
+      $(document).on('click', '.playVideoBtn', function() {
+         let embedCode = $(this).data('embed');
+
+         // If it's just a URL, wrap it inside an iframe
+         let iframeHtml = '';
+         if (embedCode.includes('<iframe')) {
+            iframeHtml = embedCode; // already full iframe embed
+         } else {
+            iframeHtml = `<iframe width="100%" height="400" src="${embedCode}?autoplay=1" frameborder="0" allowfullscreen></iframe>`;
+         }
+
+         // You can show this in a popup/modal for a cleaner look
+         Swal.fire({
+            html: `<div class="ratio ratio-16x9">${iframeHtml}</div>
+                  <button id="closeVideoPopup" class="btn btn-danger btn-sm">Close</button>
+            `,
+            width: '60%',
+            showConfirmButton: false,
+            background: 'transparent',
+            customClass: { popup: 'no-background' },
+            didOpen: () => {
+                  // handle manual close button
+                  $('#closeVideoPopup').on('click', function() {
+                     Swal.close();
+                  });
+            },
+            didClose: () => {
+                  // stop video on close
+                  $('.swal2-container iframe').attr('src', '');
+            }
+         });
       });
-   });
 
-   // Populate modal for edit
-   $(document).on('click', '.editVideoBtn', function(e) {
-      e.preventDefault();
+      // Populate modal for edit
+      $(document).on('click', '.editVideoBtn', function(e) {
+         e.preventDefault();
 
-      $('#video_id').val($(this).data('id'));
-      $('#video_title').val($(this).data('title'));
-      $('#video_embed').val($(this).data('embed'));
-      $('#video_download').val($(this).data('download'));
-      $('#video_description').val($(this).data('description'));
+         $('#video_id').val($(this).data('id'));
+         $('#video_title').val($(this).data('title'));
+         $('#video_embed').val($(this).data('embed'));
+         $('#video_download').val($(this).data('download'));
+         $('#video_description').val($(this).data('description'));
 
-      $('#embed_video').modal('show');
-   });
+         $('#embed_video').modal('show');
+      });
 
-   // delete video
-   $(document).on('click', '.deleteVideo', function(e) {
-      e.preventDefault();
+      // delete video
+      $(document).on('click', '.deleteVideo', function(e) {
+         e.preventDefault();
 
-      let videoId = $(this).data('id');
-      let videoDiv = $(this).closest('.singl_img_view');
+         let videoId = $(this).data('id');
+         let videoDiv = $(this).closest('.singl_img_view');
 
-      Swal.fire({
-         title: 'Are you sure?',
-         text: "This video will be permanently deleted.",
-         icon: 'warning',
-         showCancelButton: true,
-         confirmButtonColor: '#d33',
-         cancelButtonColor: '#6c757d',
-         confirmButtonText: 'Yes, delete it!',
-         background: '#fff'
-      }).then((result) => {
-         if (result.isConfirmed) {
-               $.ajax({
-                  url: '{{ route("talent.video.delete") }}', // Adjust route name
-                  type: 'POST',
-                  data: {
-                     _token: '{{ csrf_token() }}',
-                     id: videoId
-                  },
-                  success: function(response) {
-                     if (response.status) {
-                           Swal.fire({
-                              icon: 'success',
-                              title: 'Deleted!',
-                              text: response.message || 'Video has been deleted.',
-                              timer: 1500,
-                              showConfirmButton: false
-                           });
-                           
-                           videoDiv.fadeOut(400, function() {         
-                              $(this).remove();    
-                              updateVideoCounts(); // refresh counts                          
-                           });
-                     } else {
-                           Swal.fire('Error', response.message || 'Unable to delete video.', 'error');
+         Swal.fire({
+            title: 'Are you sure?',
+            text: "This video will be permanently deleted.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, delete it!',
+            background: '#fff'
+         }).then((result) => {
+            if (result.isConfirmed) {
+                  $.ajax({
+                     url: '{{ route("talent.video.delete") }}', // Adjust route name
+                     type: 'POST',
+                     data: {
+                        _token: '{{ csrf_token() }}',
+                        id: videoId
+                     },
+                     success: function(response) {
+                        if (response.status) {
+                              Swal.fire({
+                                 icon: 'success',
+                                 title: 'Deleted!',
+                                 text: response.message || 'Video has been deleted.',
+                                 timer: 1500,
+                                 showConfirmButton: false
+                              });
+                              
+                              videoDiv.fadeOut(400, function() {         
+                                 $(this).remove();    
+                                 updateVideoCounts(); // refresh counts                          
+                              });
+                        } else {
+                              Swal.fire('Error', response.message || 'Unable to delete video.', 'error');
+                        }
+                     },
+                     error: function() {
+                        Swal.fire('Error', 'Something went wrong. Please try again.', 'error');
                      }
-                  },
-                  error: function() {
-                     Swal.fire('Error', 'Something went wrong. Please try again.', 'error');
-                  }
-               });
-         }
+                  });
+            }
+         });
       });
-   });
 
-   // video count
-   function updateVideoCounts() {
-      let totalVideos = $('#video_panl .tab_video_galry .singl_img_view').length;
-      $('#allCount').text(totalVideos);
-   }
+      // video count
+      function updateVideoCounts() {
+         let totalVideos = $('#video_panl .tab_video_galry .singl_img_view').length;
+         $('#allCount').text(totalVideos);
+      }
 
    </script> 
+
+   <!-- step 10_4 - Digital -->
+   <script>
+      $(document).ready(function() {
+         let currentAlbum = null;
+
+         // Create new album
+         $('#createAlbumBtn').on('click', function(e) {
+            e.preventDefault();
+
+            let name = $('#digitalName').val().trim();
+            let t_general_id = $('.general_id').val().trim();
+
+            // Check if 5 albums already exist
+            let totalAlbums = $('#albumList .crt_port_1').length;
+            if (totalAlbums >= 5) {
+               Swal.fire({
+                     icon: 'warning',
+                     title: 'Limit Reached',
+                     text: 'You can create a maximum of 5 albums only.'
+               });
+               return;
+            }
+
+            if (!name) {
+               Swal.fire('Please enter an album name.');
+               return;
+            }
+
+            $.ajax({
+               url: '{{ route("talent.albums.store") }}',
+               type: 'POST',
+               data: {
+                     _token: '{{ csrf_token() }}',
+                     name: name,
+                     t_general_id: t_general_id
+               },
+               success: function(res) {
+                     if (res.status) {
+                        // Append new album dynamically
+                        $('#albumList').append(`
+                           <a href="#" class="crt_port crt_port_1" data-album="${res.album.id}">
+                                 ${res.album.name}
+                           </a>
+                        `);
+
+                        // Optional: make the new one active
+                        $('.crt_port_1').removeClass('crt_port_1_actv');
+                        $(`[data-album="${res.album.id}"]`).addClass('crt_port_1_actv');
+                        currentAlbum = res.album.id;
+
+                        Swal.fire({
+                           icon: 'success',
+                           title: 'Album Created!',
+                           text: `Album "${res.album.name}" added successfully.`,
+                           timer: 1500,
+                           showConfirmButton: false
+                        });
+
+                        $('#digitalName').val('');
+                     } else {
+                        Swal.fire('Error', 'Failed to create album.', 'error');
+                     }
+               },
+               error: function() {
+                     Swal.fire('Error', 'Something went wrong. Please try again.', 'error');
+               }
+            });
+         });
+
+
+
+         // Select Album
+         $(document).on('click', '.crt_port_1', function (e) {
+            e.preventDefault();
+
+            $('.crt_port_1').removeClass('crt_port_1_actv');
+            $(this).addClass('crt_port_1_actv');
+            $('#rightGallery').fadeIn();
+            currentAlbum = $(this).data('album');
+            
+            // Load existing images in the selected album
+            $.get(`{{ url('/talent/albums') }}/${currentAlbum}/images`, function (res) {
+               $('#albumImages').html(res.html || '<p class="text-muted">No images yet in this album.</p>');
+            });
+         }); 
+
+         // Drag Start from Left Gallery
+         $('#leftGallery').on('dragstart', '.singl_img_view', function (e) {
+            e.originalEvent.dataTransfer.setData('image_id', $(this).data('id'));
+         });
+
+         // Allow Drop
+         $('#rightGallery').on('dragover', function (e) {
+            e.preventDefault();
+            $(this).addClass('border border-success');
+         });
+
+         $('#rightGallery').on('dragleave', function () {
+            $(this).removeClass('border border-success');
+         });
+
+         // Drop Image into Album
+         $('#rightGallery').on('drop', function (e) {
+            e.preventDefault();
+            $(this).removeClass('border border-success');
+
+            if (!currentAlbum) {
+               Swal.fire('Please select an album first!');
+               return;
+            }
+
+            const imageId = e.originalEvent.dataTransfer.getData('image_id');
+            let t_general_id = $('.general_id').val().trim();
+
+            // Prevent duplicate images
+            if ($(`#rightGallery .singl_img_view[data-id="${imageId}"]`).length) {
+               Swal.fire('This image already exists in the album.');
+               return;
+            }
+
+            // Clone image into right gallery
+            const imageEl = $(`#digitalsAlbum .singl_img_view[data-id="${imageId}"]`).clone();
+            $('#albumImages').append(imageEl);
+
+            // Save to DB
+            $.post('{{ route("talent.albums.addImage") }}', {
+               _token: '{{ csrf_token() }}',
+               album_id: currentAlbum,
+               image_id: imageId,
+               t_general_id: t_general_id
+            })
+               .done(function (res) {
+                     if (res.status) {
+                        Swal.fire({
+                           icon: 'success',
+                           title: 'Image Added',
+                           text: res.message || 'Image added to album successfully.',
+                           timer: 1200,
+                           showConfirmButton: false
+                        });
+                     } else {
+                        Swal.fire('Error', res.message || 'Failed to add image.', 'error');
+                     }
+               })
+               .fail(() => Swal.fire('Error', 'Something went wrong. Try again.', 'error'));
+         });
+
+         
+
+         // When user switches to Digital tab
+         $('.dcm-nav-link').on('click', function() {
+            var target = $(this).data('target');
+            // When switching to Digital tab, refresh
+            if (target === '#digitals') {
+                  refreshLeftGallery();
+            }
+         });
+
+
+      });
+
+      function refreshLeftGallery() {
+            const t_general_id = $('.general_id').val();
+
+            $.get(`{{ url('/talent/images') }}?t_general_id=${t_general_id}`, function(res) {
+               if (res.status) {
+                  let html = '';
+                  res.images.forEach(img => {
+                     html += `
+                        <div class="singl_img_view" draggable="true" data-id="${img.id}">
+                           <img src="${img.url}" class="singl_img_view_img">
+                           <div class="img_filter">
+                              <a href=""><i class="ph-duotone ph-magnifying-glass-plus"></i></a>
+                              <a href="#" class="delete-image" data-id="${img.id}"><i class="ph-duotone ph-x-circle"></i></a>
+                           </div>
+                        </div>`;
+                  });
+
+                  $('#leftGallery').html(html);
+               }
+            });
+         }
+   </script>
 
 @endsection
